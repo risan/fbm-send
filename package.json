@@ -1,0 +1,60 @@
+{
+  "name": "messenger-client",
+  "version": "1.0.0-alpha.1",
+  "description": "A library for sending a message through Facebook Messenger send API",
+  "author": {
+    "name": "Risan Bagja Pradana",
+    "email": "risanbagja@gmail.com",
+    "url": "https://risan.io"
+  },
+  "main": "dist/messenger-client.cjs.js",
+  "module": "dist/messenger-client.esm.js",
+  "engines": {
+    "node": ">= 6"
+  },
+  "homepage": "https://github.com/risan/messenger-client#readme",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/risan/messenger-client/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/risan/messenger-client.git"
+  },
+  "keywords": [
+    "messenger",
+    "facebook",
+    "chat",
+    "bot"
+  ],
+  "scripts": {
+    "build": "NODE_ENV=build rollup -c",
+    "dev": "NODE_ENV=build rollup -c -w",
+    "lint": "eslint src",
+    "lint-fix": "eslint src --fix",
+    "prepublishOnly": "npm run test && npm run build",
+    "prettier": "prettier --write '{src,tests}/**/*.js'",
+    "test": "NODE_ENV=jest jest"
+  },
+  "devDependencies": {
+    "axios": ">= 0.16.0",
+    "babel-core": "^6.26.0",
+    "babel-jest": "^21.2.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.13.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-prettier": "^2.3.1",
+    "jest": "^21.2.1",
+    "nock": "^9.1.4",
+    "prettier": "^1.9.2",
+    "rollup": "^0.52.2",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-eslint": "^4.0.0"
+  },
+  "peerDependencies": {
+    "axios": ">= 0.16.0"
+  }
+}
