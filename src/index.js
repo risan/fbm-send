@@ -1,6 +1,10 @@
 const axios = require('axios');
 
 export default class MessengerClient {
+  static get DEFAULT_API_VERSION() {
+    return '2.11';
+  }
+
   static get TYPE_RESPONSE() {
     return 'RESPONSE';
   }
@@ -17,9 +21,17 @@ export default class MessengerClient {
     return 'NON_PROMOTIONAL_SUBSCRIPTION';
   }
 
-  constructor({ pageAccessToken, apiVersion = '2.11' }) {
+  constructor({
+    pageAccessToken,
+    apiVersion = MessengerClient.DEFAULT_API_VERSION
+  } = {}) {
+    if (!pageAccessToken) {
+      throw new Error('The pageAccessToken parameter is required.');
+    }
+
     this.pageAccessToken = pageAccessToken;
     this.apiVersion = apiVersion;
+    this.uri = `https://graph.facebook.com/v${this.apiVersion}/me/messages`;
   }
 
   sendText(recipientId, text, messagingType = MessengerClient.TYPE_RESPONSE) {

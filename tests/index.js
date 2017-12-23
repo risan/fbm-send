@@ -1,3 +1,7 @@
-test('No actual test being set', () => {
-  expect(10 + 10).toBe(20);
+import MessengerClient from '../src';
+
+test('throws error if pageAccessToken is not provided', () => {
+  expect(() => new MessengerClient()).toThrow(
+    'The pageAccessToken parameter is required.'
+  );
 });
