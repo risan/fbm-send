@@ -5,19 +5,19 @@ export default class MessengerClient {
     return '2.11';
   }
 
-  static get TYPE_RESPONSE() {
+  static get MESSAGING_TYPE_RESPONSE() {
     return 'RESPONSE';
   }
 
-  static get TYPE_UPDATE() {
+  static get MESSAGING_TYPE_UPDATE() {
     return 'UPDATE';
   }
 
-  static get TYPE_MESSAGE_TAG() {
+  static get MESSAGING_TYPE_MESSAGE_TAG() {
     return 'MESSAGE_TAG';
   }
 
-  static get TYPE_NON_PROMOTIONAL_SUBSCRIPTION() {
+  static get MESSAGING_TYPE_NON_PROMOTIONAL_SUBSCRIPTION() {
     return 'NON_PROMOTIONAL_SUBSCRIPTION';
   }
 
@@ -34,23 +34,43 @@ export default class MessengerClient {
     this.uri = `https://graph.facebook.com/v${this.apiVersion}/me/messages`;
   }
 
-  sendText(recipientId, text, messagingType = MessengerClient.TYPE_RESPONSE) {
+  sendText(
+    recipientId,
+    text,
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
+  ) {
     return this.sendMessage(recipientId, { text }, messagingType);
   }
 
-  sendImage(recipientId, url, messagingType = MessengerClient.TYPE_RESPONSE) {
+  sendImage(
+    recipientId,
+    url,
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
+  ) {
     return this.sendAttachment(recipientId, url, 'image', messagingType);
   }
 
-  sendAudio(recipientId, url, messagingType = MessengerClient.TYPE_RESPONSE) {
+  sendAudio(
+    recipientId,
+    url,
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
+  ) {
     return this.sendAttachment(recipientId, url, 'audio', messagingType);
   }
 
-  sendVideo(recipientId, url, messagingType = MessengerClient.TYPE_RESPONSE) {
+  sendVideo(
+    recipientId,
+    url,
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
+  ) {
     return this.sendAttachment(recipientId, url, 'video', messagingType);
   }
 
-  sendFile(recipientId, url, messagingType = MessengerClient.TYPE_RESPONSE) {
+  sendFile(
+    recipientId,
+    url,
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
+  ) {
     return this.sendAttachment(recipientId, url, 'file', messagingType);
   }
 
@@ -58,7 +78,7 @@ export default class MessengerClient {
     recipientId,
     text,
     replies,
-    messagingType = MessengerClient.TYPE_RESPONSE
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
   ) {
     return this.sendMessage(
       recipientId,
@@ -74,7 +94,7 @@ export default class MessengerClient {
     recipientId,
     text,
     buttons,
-    messagingType = MessengerClient.TYPE_RESPONSE
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
   ) {
     return this.sendTemplate(
       recipientId,
@@ -90,7 +110,7 @@ export default class MessengerClient {
   sendGenericTemplate(
     recipientId,
     elements,
-    messagingType = MessengerClient.TYPE_RESPONSE
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
   ) {
     return this.sendTemplate(
       recipientId,
@@ -106,7 +126,7 @@ export default class MessengerClient {
     recipientId,
     topElementStyle,
     elements,
-    messagingType = MessengerClient.TYPE_RESPONSE
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
   ) {
     return this.sendTemplate(
       recipientId,
@@ -122,7 +142,7 @@ export default class MessengerClient {
   sendOpenGraphTemplate(
     recipientId,
     elements,
-    messagingType = MessengerClient.TYPE_RESPONSE
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
   ) {
     return this.sendTemplate(
       recipientId,
@@ -138,7 +158,7 @@ export default class MessengerClient {
     recipientId,
     payload,
     elements,
-    messagingType = MessengerClient.TYPE_RESPONSE
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
   ) {
     return this.sendTemplate(
       recipientId,
@@ -154,7 +174,7 @@ export default class MessengerClient {
   sendMediaTemplate(
     recipientId,
     elements,
-    messagingType = MessengerClient.TYPE_RESPONSE
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
   ) {
     return this.sendTemplate(
       recipientId,
@@ -166,22 +186,31 @@ export default class MessengerClient {
     );
   }
 
-  sendReadReceipt(recipientId, messagingType = MessengerClient.TYPE_RESPONSE) {
+  sendReadReceipt(
+    recipientId,
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
+  ) {
     return this.sendAction(recipientId, 'mark_seen', messagingType);
   }
 
-  sendTypingOn(recipientId, messagingType = MessengerClient.TYPE_RESPONSE) {
+  sendTypingOn(
+    recipientId,
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
+  ) {
     return this.sendAction(recipientId, 'typing_on', messagingType);
   }
 
-  sendTypingOff(recipientId, messagingType = MessengerClient.TYPE_RESPONSE) {
+  sendTypingOff(
+    recipientId,
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
+  ) {
     return this.sendAction(recipientId, 'typing_off', messagingType);
   }
 
   sendAction(
     recipientId,
     action,
-    messagingType = MessengerClient.TYPE_RESPONSE
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
   ) {
     return this.send({
       messaging_type: messagingType,
@@ -196,7 +225,7 @@ export default class MessengerClient {
     recipientId,
     url,
     type = 'file',
-    messagingType = MessengerClient.TYPE_RESPONSE
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
   ) {
     return this.sendMessage(
       recipientId,
@@ -213,7 +242,7 @@ export default class MessengerClient {
   sendTemplate(
     recipientId,
     payload,
-    messagingType = MessengerClient.TYPE_RESPONSE
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
   ) {
     return this.sendMessage(
       recipientId,
@@ -230,7 +259,7 @@ export default class MessengerClient {
   sendMessage(
     recipientId,
     message,
-    messagingType = MessengerClient.TYPE_RESPONSE
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
   ) {
     return this.send({
       messaging_type: messagingType,
