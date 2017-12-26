@@ -273,39 +273,33 @@ export default class MessengerClient {
   send(data) {
     return new Promise((resolve, reject) => {
       axios
-        .post(
-          `https://graph.facebook.com/v${this.apiVersion}/me/messages`,
-          data,
-          {
-            headers: {
-              Authorization: `Bearer ${this.pageAccessToken}`
-            }
-          }
-        )
-        .then(response => {
-          resolve(response.data);
-        })
-        .catch(error => {
-          if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx.
-            const { message, type, code } = error.response.data.error;
-            reject(
-              new Error(
-                `Failed calling send API: [${code}][${type}] ${message}`
-              )
-            );
-          } else if (error.request) {
-            // The request was made but no response was received
-            // `error.request` is an instance of XMLHttpRequest in the browser and
-            // an instance of http.ClientRequest in node.js
-            reject(
-              new Error('Failed calling send API, no response was received.')
-            );
-          } else {
-            reject(error);
-          }
-        });
+        .post(this.uri, data, this.getRequestConfig())
+        .then(response => resolve(response.data))
+        .catch(error => reject(MessengerClient.castToError(error)));
     });
+  }
+
+  getRequestConfig() {
+    return {
+      headers: {
+        Authorization: `Bearer ${this.pageAccessToken}`
+      }
+    };
+  }
+
+  static castToError(error) {
+    if (error.response) {
+      const { message, type, code } = error.response.data.error;
+
+      return new Error(
+        `Failed calling send API: [${code}][${type}] ${message}`
+      );
+    }
+
+    if (error.request) {
+      return new Error('Failed calling send API, no response was received.');
+    }
+
+    return error;
   }
 }
