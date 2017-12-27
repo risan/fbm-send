@@ -55,3 +55,39 @@ test('can set custom apiVersion', () => {
 test('can get URI property', () => {
   expect(messengerClient.uri).toBe(URI);
 });
+
+test('can get request config', () => {
+  expect(messengerClient.getRequestConfig()).toEqual({
+    headers: {
+      Authorization: `Bearer ${PAGE_ACCESS_TOKEN}`
+    }
+  });
+});
+
+test('can cast error response to error object', () => {
+  expect(
+    MessengerClient.castToError({
+      response: {
+        data: {
+          error: {
+            code: 123,
+            type: 'foo',
+            message: 'bar'
+          }
+        }
+      }
+    })
+  ).toEqual(new Error('Failed calling send API: [123][foo] bar'));
+});
+
+test('can cast error request to error object', () => {
+  expect(MessengerClient.castToError({ request: true })).toEqual(
+    new Error('Failed calling send API, no response was received.')
+  );
+});
+
+test('it wont cast non-request error', () => {
+  const error = new Error('foo bar');
+
+  expect(MessengerClient.castToError(error)).toEqual(error);
+});
