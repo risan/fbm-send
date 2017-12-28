@@ -1,3 +1,4 @@
+import nock from 'nock';
 import MessengerClient from '../src';
 
 const PAGE_ACCESS_TOKEN = 'foo';
@@ -7,6 +8,32 @@ const URI = `https://graph.facebook.com/v${DEFAULT_API_VERSION}/me/messages`;
 const messengerClient = new MessengerClient({
   pageAccessToken: PAGE_ACCESS_TOKEN
 });
+
+const SUCCESS_RESPONSE = { foo: 'bar' };
+
+const createServer = ({
+  data = {},
+  statusCode = 200,
+  response = SUCCESS_RESPONSE
+} = {}) => {
+  return nock(`https://graph.facebook.com/v${DEFAULT_API_VERSION}/me`, {
+    reqheaders: {
+      Authorization: `Bearer ${PAGE_ACCESS_TOKEN}`
+    }
+  })
+    .post('/messages', data)
+    .reply(statusCode, response);
+};
+
+const createServerWithError = ({ data = {}, error }) => {
+  return nock(`https://graph.facebook.com/v${DEFAULT_API_VERSION}/me`, {
+    reqheaders: {
+      Authorization: `Bearer ${PAGE_ACCESS_TOKEN}`
+    }
+  })
+    .post('/messages', data)
+    .replyWithError(error);
+};
 
 test('can get default api version', () => {
   expect(MessengerClient.DEFAULT_API_VERSION).toBe(DEFAULT_API_VERSION);
@@ -56,6 +83,36 @@ test('can get URI property', () => {
   expect(messengerClient.uri).toBe(URI);
 });
 
+test('can send request to messenger send API', () => {
+  const data = { foo: 'bar' };
+  const server = createServer({ data });
+
+  expect.assertions(1);
+
+  return expect(messengerClient.send(data)).resolves.toEqual(SUCCESS_RESPONSE);
+});
+
+test('throws error when API returns bad request response', () => {
+  const data = { foo: 'bar' };
+  const server = createServer({
+    data,
+    statusCode: 400,
+    response: {
+      error: {
+        code: 123,
+        type: 'foo',
+        message: 'bar'
+      }
+    }
+  });
+
+  expect.assertions(1);
+
+  return expect(messengerClient.send(data)).rejects.toEqual(
+    new Error('Failed calling send API: [123][foo] bar')
+  );
+});
+
 test('can get request config', () => {
   expect(messengerClient.getRequestConfig()).toEqual({
     headers: {
@@ -78,6 +135,22 @@ test('can cast error response to error object', () => {
       }
     })
   ).toEqual(new Error('Failed calling send API: [123][foo] bar'));
+});
+
+test('throws error when API returns no response', () => {
+  const data = { foo: 'bar' };
+  const server = createServerWithError({
+    data,
+    error: {
+      request: 'foo bar'
+    }
+  });
+
+  expect.assertions(1);
+
+  return expect(messengerClient.send(data)).rejects.toEqual(
+    new Error('Failed calling send API, no response was received.')
+  );
 });
 
 test('can cast error request to error object', () => {
