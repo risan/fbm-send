@@ -34,12 +34,16 @@ export default class MessengerClient {
     this.uri = `https://graph.facebook.com/v${this.apiVersion}/me/messages`;
   }
 
-  sendText(
+  sendText({
     recipientId,
     text,
     messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.sendMessage(recipientId, { text }, messagingType);
+  }) {
+    return this.send({
+      messaging_type: messagingType,
+      recipient: { id: recipientId },
+      message: { text }
+    });
   }
 
   sendImage(
