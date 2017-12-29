@@ -4,10 +4,19 @@ import MessengerClient from '../src';
 const PAGE_ACCESS_TOKEN = 'foo';
 const DEFAULT_API_VERSION = '2.11';
 const URI = `https://graph.facebook.com/v${DEFAULT_API_VERSION}/me/messages`;
+const RECIPIENT_ID = 123;
+const MESSAGE = 'foobar';
 
-const messengerClient = new MessengerClient({
+const client = new MessengerClient({
   pageAccessToken: PAGE_ACCESS_TOKEN
 });
+
+const createMock = method => {
+  const client = new MessengerClient({ pageAccessToken: PAGE_ACCESS_TOKEN });
+  client[method] = jest.fn();
+
+  return client;
+};
 
 const SUCCESS_RESPONSE = { foo: 'bar' };
 
@@ -64,23 +73,41 @@ test('throws error if pageAccessToken is not provided', () => {
 });
 
 test('can get pageAccessToken property', () => {
-  expect(messengerClient.pageAccessToken).toBe(PAGE_ACCESS_TOKEN);
+  expect(client.pageAccessToken).toBe(PAGE_ACCESS_TOKEN);
 });
 
 test('can get default apiVersion', () => {
-  expect(messengerClient.apiVersion).toBe(MessengerClient.DEFAULT_API_VERSION);
+  expect(client.apiVersion).toBe(MessengerClient.DEFAULT_API_VERSION);
 });
 
 test('can set custom apiVersion', () => {
-  const messengerClient = new MessengerClient({
+  const client = new MessengerClient({
     pageAccessToken: PAGE_ACCESS_TOKEN,
     apiVersion: 'foo'
   });
-  expect(messengerClient.apiVersion).toBe('foo');
+
+  expect(client.apiVersion).toBe('foo');
 });
 
 test('can get URI property', () => {
-  expect(messengerClient.uri).toBe(URI);
+  expect(client.uri).toBe(URI);
+});
+
+test('can send text', () => {
+  const client = createMock('send');
+  const text = MESSAGE;
+
+  client.sendText({
+    recipientId: RECIPIENT_ID,
+    text
+  });
+
+  expect(client.send.mock.calls.length).toBe(1);
+  expect(client.send.mock.calls[0][0]).toEqual({
+    messaging_type: MessengerClient.MESSAGING_TYPE_RESPONSE,
+    recipient: { id: RECIPIENT_ID },
+    message: { text }
+  });
 });
 
 test('can send request to messenger send API', () => {
@@ -89,7 +116,7 @@ test('can send request to messenger send API', () => {
 
   expect.assertions(1);
 
-  return expect(messengerClient.send(data)).resolves.toEqual(SUCCESS_RESPONSE);
+  return expect(client.send(data)).resolves.toEqual(SUCCESS_RESPONSE);
 });
 
 test('throws error when API returns bad request response', () => {
@@ -108,13 +135,13 @@ test('throws error when API returns bad request response', () => {
 
   expect.assertions(1);
 
-  return expect(messengerClient.send(data)).rejects.toEqual(
+  return expect(client.send(data)).rejects.toEqual(
     new Error('Failed calling send API: [123][foo] bar')
   );
 });
 
 test('can get request config', () => {
-  expect(messengerClient.getRequestConfig()).toEqual({
+  expect(client.getRequestConfig()).toEqual({
     headers: {
       Authorization: `Bearer ${PAGE_ACCESS_TOKEN}`
     }
@@ -148,7 +175,7 @@ test('throws error when API returns no response', () => {
 
   expect.assertions(1);
 
-  return expect(messengerClient.send(data)).rejects.toEqual(
+  return expect(client.send(data)).rejects.toEqual(
     new Error('Failed calling send API, no response was received.')
   );
 });
