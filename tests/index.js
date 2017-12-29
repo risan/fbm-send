@@ -167,6 +167,28 @@ test('can send file', () => {
   });
 });
 
+test('can send quick reply', () => {
+  const client = createMock('sendMessage');
+  const text = MESSAGE;
+  const replies = [{ foo: 'bar' }];
+
+  client.sendQuickReply({
+    recipientId: RECIPIENT_ID,
+    text,
+    replies
+  });
+
+  expect(client.sendMessage.mock.calls.length).toBe(1);
+  expect(client.sendMessage.mock.calls[0][0]).toEqual({
+    recipientId: RECIPIENT_ID,
+    message: {
+      text,
+      quick_replies: replies
+    },
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
 test('can send attachment from url', () => {
   const client = createMock('sendAttachment');
   const url = 'https://example.com';
