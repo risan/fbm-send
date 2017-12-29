@@ -17,8 +17,9 @@ Javascript library for sending a message through Facebook Messenger send API.
     * [Constructor](#constructor)
     * [Messaging Type](#messaging-type)
     * [Interacts with Facebook Messenger Send API](#interacts-with-facebook-messenger-send-api)
-    * [Sending Text](#sending-text)
-    * [Sending Attachments](#sending-attachments)
+    * [Send Text](#send-text)
+    * [Send Attachments](#send-attachments)
+    * [Send Quick Reply](#send-quick-reply)
 
 ## Install
 
@@ -97,7 +98,7 @@ client.send({
   .catch(e => console.error(e));
 ```
 
-### Sending Text
+### Send Text
 
 ```js
 client.sendText({ recipientId, text, [messagingType] });
@@ -121,19 +122,12 @@ client.sendText({
   .catch(e => console.error(e));
 ```
 
-### Sending Attachments
+### Send Attachments
 
 ```js
-// Sending image attachment
 client.sendImage({ recipientId, url, [messagingType] });
-
-// Sending audio attachment
 client.sendAudio({ recipientId, url, [messagingType] });
-
-// Sending video attachment
 client.sendVideo({ recipientId, url, [messagingType] });
-
-// Sending file attachment
 client.sendFile({ recipientId, url, [messagingType] });
 ```
 
@@ -150,6 +144,43 @@ client.sendFile({ recipientId, url, [messagingType] });
 client.sendImage({
     recipientId: 'RECIPIENT_ID',
     url: 'https://example.com/cat.gif'
+  })
+  .then(data => console.log(data))
+  .catch(e => console.error(e));
+```
+
+### Send Quick Reply
+
+```js
+client.quickReply({ recipientId, text, replies [messagingType] });
+```
+
+**Required Parameters:**
+- `recipientId` (`Integer`): The recipient ID.
+- `text` (`String`): The main text to send along with the quick replies
+- `replies` (`Array`): An array of quick reply options, check all possible properties [here](https://developers.facebook.com/docs/messenger-platform/reference/send-api/quick-replies#quick_reply).
+
+**Optional Parameters:**
+- `messagingType` (`String`): The [messaging type](#messaging-type), default to `RESPONSE`.
+
+#### Example
+
+```js
+client.sendQuickReply({
+    recipientId: 'RECIPIENT_ID',
+    text: 'Choose your favorite color',
+    replies: [
+      {
+        content_type: 'text',
+        title: 'Red',
+        payload: 'RED_IS_SELECTED'
+      },
+      {
+        content_type: 'text',
+        title: 'Green',
+        payload: 'GREEN_IS_SELECTED'
+      }
+    ]
   })
   .then(data => console.log(data))
   .catch(e => console.error(e));
