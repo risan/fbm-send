@@ -46,36 +46,56 @@ export default class MessengerClient {
     });
   }
 
-  sendImage(
+  sendImage({
     recipientId,
     url,
     messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.sendAttachment(recipientId, url, 'image', messagingType);
+  }) {
+    return this.sendAttachmentFromUrl({
+      recipientId,
+      url,
+      type: 'image',
+      messagingType
+    });
   }
 
-  sendAudio(
+  sendAudio({
     recipientId,
     url,
     messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.sendAttachment(recipientId, url, 'audio', messagingType);
+  }) {
+    return this.sendAttachmentFromUrl({
+      recipientId,
+      url,
+      type: 'audio',
+      messagingType
+    });
   }
 
-  sendVideo(
+  sendVideo({
     recipientId,
     url,
     messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.sendAttachment(recipientId, url, 'video', messagingType);
+  }) {
+    return this.sendAttachmentFromUrl({
+      recipientId,
+      url,
+      type: 'video',
+      messagingType
+    });
   }
 
-  sendFile(
+  sendFile({
     recipientId,
     url,
     messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.sendAttachment(recipientId, url, 'file', messagingType);
+  }) {
+    return this.sendAttachmentFromUrl({
+      recipientId,
+      url,
+      type: 'file',
+      messagingType
+    });
   }
 
   sendQuickReply(
@@ -225,24 +245,6 @@ export default class MessengerClient {
     });
   }
 
-  sendAttachment(
-    recipientId,
-    url,
-    type = 'file',
-    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.sendMessage(
-      recipientId,
-      {
-        attachment: {
-          type,
-          payload: { url }
-        }
-      },
-      messagingType
-    );
-  }
-
   sendTemplate(
     recipientId,
     payload,
@@ -258,6 +260,31 @@ export default class MessengerClient {
       },
       messagingType
     );
+  }
+
+  sendAttachmentFromUrl({
+    recipientId,
+    url,
+    type = 'file',
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
+  }) {
+    return this.sendAttachment({
+      recipientId,
+      attachment: { type, payload: { url } },
+      messagingType
+    });
+  }
+
+  sendAttachment({
+    recipientId,
+    attachment,
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
+  }) {
+    return this.sendMessage({
+      recipientId,
+      message: { attachment },
+      messagingType
+    });
   }
 
   sendMessage({
