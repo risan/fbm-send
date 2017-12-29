@@ -107,6 +107,94 @@ test('can send text', () => {
   });
 });
 
+test('can send image', () => {
+  const client = createMock('sendAttachmentFromUrl');
+  const url = 'https://example.com';
+
+  client.sendImage({ recipientId: RECIPIENT_ID, url });
+
+  expect(client.sendAttachmentFromUrl.mock.calls.length).toBe(1);
+  expect(client.sendAttachmentFromUrl.mock.calls[0][0]).toEqual({
+    recipientId: RECIPIENT_ID,
+    url,
+    type: 'image',
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
+test('can send audio', () => {
+  const client = createMock('sendAttachmentFromUrl');
+  const url = 'https://example.com';
+
+  client.sendAudio({ recipientId: RECIPIENT_ID, url });
+
+  expect(client.sendAttachmentFromUrl.mock.calls.length).toBe(1);
+  expect(client.sendAttachmentFromUrl.mock.calls[0][0]).toEqual({
+    recipientId: RECIPIENT_ID,
+    url,
+    type: 'audio',
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
+test('can send video', () => {
+  const client = createMock('sendAttachmentFromUrl');
+  const url = 'https://example.com';
+
+  client.sendVideo({ recipientId: RECIPIENT_ID, url });
+
+  expect(client.sendAttachmentFromUrl.mock.calls.length).toBe(1);
+  expect(client.sendAttachmentFromUrl.mock.calls[0][0]).toEqual({
+    recipientId: RECIPIENT_ID,
+    url,
+    type: 'video',
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
+test('can send file', () => {
+  const client = createMock('sendAttachmentFromUrl');
+  const url = 'https://example.com';
+
+  client.sendFile({ recipientId: RECIPIENT_ID, url });
+
+  expect(client.sendAttachmentFromUrl.mock.calls.length).toBe(1);
+  expect(client.sendAttachmentFromUrl.mock.calls[0][0]).toEqual({
+    recipientId: RECIPIENT_ID,
+    url,
+    type: 'file',
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
+test('can send attachment from url', () => {
+  const client = createMock('sendAttachment');
+  const url = 'https://example.com';
+
+  client.sendAttachmentFromUrl({ recipientId: RECIPIENT_ID, url });
+
+  expect(client.sendAttachment.mock.calls.length).toBe(1);
+  expect(client.sendAttachment.mock.calls[0][0]).toEqual({
+    recipientId: RECIPIENT_ID,
+    attachment: { type: 'file', payload: { url } },
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
+test('can send attachment', () => {
+  const client = createMock('sendMessage');
+  const attachment = { foo: 'bar' };
+
+  client.sendAttachment({ recipientId: RECIPIENT_ID, attachment });
+
+  expect(client.sendMessage.mock.calls.length).toBe(1);
+  expect(client.sendMessage.mock.calls[0][0]).toEqual({
+    recipientId: RECIPIENT_ID,
+    message: { attachment },
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
 test('can send message', () => {
   const client = createMock('send');
   const message = { text: MESSAGE };
