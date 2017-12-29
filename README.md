@@ -49,10 +49,10 @@ client.sendText({ recipientId: 'RECIPIENT_ID', text: 'Hello World' })
 const client = new MessengerClient({ pageAccessToken, [apiVersion] });
 ```
 
-####  Required Parameters:
+**Required Parameters:**
 - `pageAccessToken` (`String`): The access token for the page where the Messenger bot will be used. To get your page access token, heads up to [Facebook apps](https://developers.facebook.com/apps) page and select the app that you use for your Messenger bot. Within your app page, select the **Messenger** >> **Settings** menu on the left. On this Messenger settings console, you'll find **Token Generation** section to generate the access token.
 
-#### Optional Parameters:
+**Optional Parameters:**
 - `apiVersion` (`String`): The Facebook Messenger API version to use, default to `2.11`.
 
 ### Messaging Type
@@ -76,7 +76,7 @@ This is the most basic API to allow you interact directly with Facebook Messenge
 client.send(data);
 ```
 
-#### Required Parameters
+**Required Parameters:**
 - `data` (`Object`): An object of payload that you need to provide to Facebook Messenger Send API. Check the [Send API Documentation](https://developers.facebook.com/docs/messenger-platform/reference/send-api/#payload) to see all possible payload properties.
 
 #### Example
@@ -102,11 +102,11 @@ client.send({
 client.sendText({ recipientId, text, messagingType });
 ```
 
-#### Required Parameters
+**Required Parameters:**
 - `recipientId` (`Integer`): The recipient ID.
 - `text` (`String`): The text that you want to send to the user
 
-#### Optional Parameters
+**Optional Parameters:**
 - `messagingType` (`String`): The [messaging type](#messaging-type), default to `RESPONSE`.
 
 #### Example
