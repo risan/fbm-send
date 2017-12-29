@@ -94,19 +94,32 @@ test('can get URI property', () => {
 });
 
 test('can send text', () => {
-  const client = createMock('send');
+  const client = createMock('sendMessage');
   const text = MESSAGE;
 
-  client.sendText({
+  client.sendText({ recipientId: RECIPIENT_ID, text });
+
+  expect(client.sendMessage.mock.calls.length).toBe(1);
+  expect(client.sendMessage.mock.calls[0][0]).toEqual({
     recipientId: RECIPIENT_ID,
-    text
+    message: { text },
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
   });
+});
+
+test('can send message', () => {
+  const client = createMock('send');
+  const message = { text: MESSAGE };
+
+  client.sendMessage({ recipientId: RECIPIENT_ID, message });
 
   expect(client.send.mock.calls.length).toBe(1);
   expect(client.send.mock.calls[0][0]).toEqual({
     messaging_type: MessengerClient.MESSAGING_TYPE_RESPONSE,
-    recipient: { id: RECIPIENT_ID },
-    message: { text }
+    recipient: {
+      id: RECIPIENT_ID
+    },
+    message
   });
 });
 
