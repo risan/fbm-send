@@ -19,8 +19,8 @@ Javascript library for sending a message through Facebook Messenger send API.
     * [Interacts with Facebook Messenger Send API](#interacts-with-facebook-messenger-send-api)
     * [Send Text](#send-text)
     * [Send Attachments](#send-attachments)
-    * [Send Quick Reply](#send-quick-reply)
-    * [Send Button Template](#send-button-template)
+    * [Send Quick Replies](#send-quick-replies)
+    * [Send Buttons](#send-buttons)
 
 ## Install
 
@@ -80,7 +80,9 @@ client.send(data);
 ```
 
 **Required Parameters:**
-- `data` (`Object`): An object of payload that you need to provide to Facebook Messenger Send API. Check the [Send API Documentation](https://developers.facebook.com/docs/messenger-platform/reference/send-api/#payload) to see all possible payload properties.
+- `data` (`Object`): An object of payload that you need to provide to Facebook Messenger Send API.
+
+Check the [Send API Documentation](https://developers.facebook.com/docs/messenger-platform/reference/send-api/#payload) to see all possible payload properties.
 
 #### Example
 Sending a text message using a basic `send` method:
@@ -109,9 +111,6 @@ client.sendText({ recipientId, text, [messagingType] });
 - `recipientId` (`Integer`): The recipient ID.
 - `text` (`String`): The text that you want to send to the user
 
-**Optional Parameters:**
-- `messagingType` (`String`): The [messaging type](#messaging-type), default to `RESPONSE`.
-
 #### Example
 
 ```js
@@ -136,9 +135,6 @@ client.sendFile({ recipientId, url, [messagingType] });
 - `recipientId` (`Integer`): The recipient ID.
 - `url` (`String`): The URL of the file that you want to send
 
-**Optional Parameters:**
-- `messagingType` (`String`): The [messaging type](#messaging-type), default to `RESPONSE`.
-
 #### Example
 
 ```js
@@ -150,16 +146,18 @@ client.sendImage({
   .catch(e => console.error(e));
 ```
 
-### Send Quick Reply
+### Send Quick Replies
 
 ```js
-client.quickReply({ recipientId, text, replies [messagingType] });
+client.sendQuickReplies({ recipientId, text, replies [messagingType] });
 ```
 
 **Required Parameters:**
 - `recipientId` (`Integer`): The recipient ID.
 - `text` (`String`): The main text to send along with the quick replies
-- `replies` (`Array`): An array of quick reply options, check all possible properties [here](https://developers.facebook.com/docs/messenger-platform/reference/send-api/quick-replies#quick_reply).
+- `replies` (`Array`): An array of quick reply options
+
+Check the [quick replies documentation](https://developers.facebook.com/docs/messenger-platform/reference/send-api/quick-replies#quick_reply) to see all possible properties for `replies` parameter.
 
 **Optional Parameters:**
 - `messagingType` (`String`): The [messaging type](#messaging-type), default to `RESPONSE`.
@@ -167,7 +165,7 @@ client.quickReply({ recipientId, text, replies [messagingType] });
 #### Example
 
 ```js
-client.sendQuickReply({
+client.sendQuickReplies({
     recipientId: 'RECIPIENT_ID',
     text: 'Choose your favorite color',
     replies: [
@@ -187,24 +185,23 @@ client.sendQuickReply({
   .catch(e => console.error(e));
 ```
 
-### Send Button Template
+### Send Buttons
 
 ```js
-client.sendButtonTemplate({ recipientId, text, buttons [messagingType] });
+client.sendButtons({ recipientId, text, buttons [messagingType] });
 ```
 
 **Required Parameters:**
 - `recipientId` (`Integer`): The recipient ID.
 - `text` (`String`): The main text to send along with the buttons
-- `replies` (`Array`): An array that consist of 1-3 button objects, check all types of button and how to construct them [here](https://developers.facebook.com/docs/messenger-platform/send-messages/buttons)
+- `replies` (`Array`): An array that consist of 1-3 button objects
 
-**Optional Parameters:**
-- `messagingType` (`String`): The [messaging type](#messaging-type), default to `RESPONSE`.
+Check the [buttons documentaion](https://developers.facebook.com/docs/messenger-platform/send-messages/buttons) to see all possible button types and how to construct them.
 
 #### Example
 
 ```js
-client.sendButtonTemplate({
+client.sendButtons({
     recipientId: 'RECIPIENT_ID',
     text: 'Choose your favorite color',
     buttons: [

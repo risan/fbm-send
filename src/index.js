@@ -98,7 +98,7 @@ export default class MessengerClient {
     });
   }
 
-  sendQuickReply({
+  sendQuickReplies({
     recipientId,
     text,
     replies,
@@ -114,7 +114,7 @@ export default class MessengerClient {
     });
   }
 
-  sendButtonTemplate({
+  sendButtons({
     recipientId,
     text,
     buttons,

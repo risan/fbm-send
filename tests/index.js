@@ -167,12 +167,12 @@ test('can send file', () => {
   });
 });
 
-test('can send quick reply', () => {
+test('can send quick replies', () => {
   const client = createMock('sendMessage');
   const text = MESSAGE;
   const replies = [{ foo: 'bar' }];
 
-  client.sendQuickReply({
+  client.sendQuickReplies({
     recipientId: RECIPIENT_ID,
     text,
     replies
@@ -189,12 +189,12 @@ test('can send quick reply', () => {
   });
 });
 
-test('can send button template', () => {
+test('can send buttons', () => {
   const client = createMock('sendTemplate');
   const text = MESSAGE;
   const buttons = ['foo'];
 
-  client.sendButtonTemplate({
+  client.sendButtons({
     recipientId: RECIPIENT_ID,
     text,
     buttons
