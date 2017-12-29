@@ -48,9 +48,14 @@ client.sendText({ recipientId: 'RECIPIENT_ID', text: 'Hello World' })
 const client = new MessengerClient({ pageAccessToken, [apiVersion] });
 ```
 
-**Parameters**:
-- `pageAccessToken` (`String`|Required): The access token for the page where the Messenger bot will be used. To get your page access token, heads up to [Facebook apps](https://developers.facebook.com/apps) page and select the app that you use for your Messenger bot. Within your app page, select the **Messenger** >> **Settings** menu on the left. On this Messenger settings console, you'll find **Token Generation** section to generate the access token.
-- `apiVersion` (`String`|Optional|Default `2.11`): The Facebook Messenger API version to use.
+####  Parameters
+- `pageAccessToken` (**Required**):
+type: `String`
+The access token for the page where the Messenger bot will be used. To get your page access token, heads up to [Facebook apps](https://developers.facebook.com/apps) page and select the app that you use for your Messenger bot. Within your app page, select the **Messenger** >> **Settings** menu on the left. On this Messenger settings console, you'll find **Token Generation** section to generate the access token.
+- `apiVersion` (**Optional**):
+type: `String`
+default: `2.11`
+The Facebook Messenger API version to use.
 
 ### Messaging Type
 
