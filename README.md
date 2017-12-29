@@ -18,6 +18,7 @@ Javascript library for sending a message through Facebook Messenger send API.
     * [Messaging Type](#messaging-type)
     * [Interacts with Facebook Messenger Send API](#interacts-with-facebook-messenger-send-api)
     * [Sending Text](#sending-text)
+    * [Sending Attachments](#sending-attachments)
 
 ## Install
 
@@ -99,7 +100,7 @@ client.send({
 ### Sending Text
 
 ```js
-client.sendText({ recipientId, text, messagingType });
+client.sendText({ recipientId, text, [messagingType] });
 ```
 
 **Required Parameters:**
@@ -115,6 +116,40 @@ client.sendText({ recipientId, text, messagingType });
 client.sendText({
     recipientId: 'RECIPIENT_ID',
     text: 'Hello World'
+  })
+  .then(data => console.log(data))
+  .catch(e => console.error(e));
+```
+
+### Sending Attachments
+
+```js
+// Sending image attachment
+client.sendImage({ recipientId, url, [messagingType] });
+
+// Sending audio attachment
+client.sendAudio({ recipientId, url, [messagingType] });
+
+// Sending video attachment
+client.sendVideo({ recipientId, url, [messagingType] });
+
+// Sending file attachment
+client.sendFile({ recipientId, url, [messagingType] });
+```
+
+**Required Parameters:**
+- `recipientId` (`Integer`): The recipient ID.
+- `url` (`String`): The URL of the file that you want to send
+
+**Optional Parameters:**
+- `messagingType` (`String`): The [messaging type](#messaging-type), default to `RESPONSE`.
+
+#### Example
+
+```js
+client.sendImage({
+    recipientId: 'RECIPIENT_ID',
+    url: 'https://example.com/cat.gif'
   })
   .then(data => console.log(data))
   .catch(e => console.error(e));
