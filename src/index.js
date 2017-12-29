@@ -39,10 +39,10 @@ export default class MessengerClient {
     text,
     messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
   }) {
-    return this.send({
-      messaging_type: messagingType,
-      recipient: { id: recipientId },
-      message: { text }
+    return this.sendMessage({
+      recipientId,
+      message: { text },
+      messagingType
     });
   }
 
@@ -260,11 +260,11 @@ export default class MessengerClient {
     );
   }
 
-  sendMessage(
+  sendMessage({
     recipientId,
     message,
     messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
+  }) {
     return this.send({
       messaging_type: messagingType,
       recipient: {
