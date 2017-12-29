@@ -189,6 +189,54 @@ test('can send quick reply', () => {
   });
 });
 
+test('can send button template', () => {
+  const client = createMock('sendTemplate');
+  const text = MESSAGE;
+  const buttons = ['foo'];
+
+  client.sendButtonTemplate({
+    recipientId: RECIPIENT_ID,
+    text,
+    buttons
+  });
+
+  expect(client.sendTemplate.mock.calls.length).toBe(1);
+  expect(client.sendTemplate.mock.calls[0][0]).toEqual({
+    recipientId: RECIPIENT_ID,
+    type: 'button',
+    payload: { text, buttons },
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
+test('can send template', () => {
+  const client = createMock('sendAttachment');
+  const url = 'https://example.com';
+
+  client.sendTemplate({
+    recipientId: RECIPIENT_ID,
+    type: 'foo',
+    payload: {
+      text: 'bar',
+      buttons: ['baz']
+    }
+  });
+
+  expect(client.sendAttachment.mock.calls.length).toBe(1);
+  expect(client.sendAttachment.mock.calls[0][0]).toEqual({
+    recipientId: RECIPIENT_ID,
+    attachment: {
+      type: 'template',
+      payload: {
+        template_type: 'foo',
+        text: 'bar',
+        buttons: ['baz']
+      }
+    },
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
 test('can send attachment from url', () => {
   const client = createMock('sendAttachment');
   const url = 'https://example.com';
