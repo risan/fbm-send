@@ -114,21 +114,21 @@ export default class MessengerClient {
     });
   }
 
-  sendButtonTemplate(
+  sendButtonTemplate({
     recipientId,
     text,
     buttons,
     messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.sendTemplate(
+  }) {
+    return this.sendTemplate({
       recipientId,
-      {
-        template_type: 'button',
+      type: 'button',
+      payload: {
         text,
         buttons
       },
       messagingType
-    );
+    });
   }
 
   sendGenericTemplate(
@@ -245,21 +245,23 @@ export default class MessengerClient {
     });
   }
 
-  sendTemplate(
+  sendTemplate({
     recipientId,
+    type,
     payload,
     messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.sendMessage(
+  }) {
+    return this.sendAttachment({
       recipientId,
-      {
-        attachment: {
-          type: 'template',
-          payload
+      attachment: {
+        type: 'template',
+        payload: {
+          template_type: type,
+          ...payload
         }
       },
       messagingType
-    );
+    });
   }
 
   sendAttachmentFromUrl({
