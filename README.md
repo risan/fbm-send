@@ -20,6 +20,7 @@ Javascript library for sending a message through Facebook Messenger send API.
     * [Send Text](#send-text)
     * [Send Attachments](#send-attachments)
     * [Send Quick Reply](#send-quick-reply)
+    * [Send Button Template](#send-button-template)
 
 ## Install
 
@@ -179,6 +180,43 @@ client.sendQuickReply({
         content_type: 'text',
         title: 'Green',
         payload: 'GREEN_IS_SELECTED'
+      }
+    ]
+  })
+  .then(data => console.log(data))
+  .catch(e => console.error(e));
+```
+
+### Send Button Template
+
+```js
+client.sendButtonTemplate({ recipientId, text, buttons [messagingType] });
+```
+
+**Required Parameters:**
+- `recipientId` (`Integer`): The recipient ID.
+- `text` (`String`): The main text to send along with the buttons
+- `replies` (`Array`): An array that consist of 1-3 button objects, check all types of button and how to construct them [here](https://developers.facebook.com/docs/messenger-platform/send-messages/buttons)
+
+**Optional Parameters:**
+- `messagingType` (`String`): The [messaging type](#messaging-type), default to `RESPONSE`.
+
+#### Example
+
+```js
+client.sendButtonTemplate({
+    recipientId: 'RECIPIENT_ID',
+    text: 'Choose your favorite color',
+    buttons: [
+      {
+        type: 'web_url',
+        url: 'https://example.com',
+        title: 'Open Web URL'
+      },
+      {
+        type: 'postback',
+        title: 'Trigger Postback',
+        payload: 'POSTBACK_BUTTON_CLICKED'
       }
     ]
   })
