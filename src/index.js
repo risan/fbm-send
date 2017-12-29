@@ -98,20 +98,20 @@ export default class MessengerClient {
     });
   }
 
-  sendQuickReply(
+  sendQuickReply({
     recipientId,
     text,
     replies,
     messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.sendMessage(
+  }) {
+    return this.sendMessage({
       recipientId,
-      {
+      message: {
         text,
         quick_replies: replies
       },
       messagingType
-    );
+    });
   }
 
   sendButtonTemplate(
