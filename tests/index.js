@@ -167,6 +167,45 @@ test('can send file', () => {
   });
 });
 
+test('can send read receipt', () => {
+  const client = createMock('sendAction');
+
+  client.sendReadReceipt({ recipientId: RECIPIENT_ID });
+
+  expect(client.sendAction.mock.calls.length).toBe(1);
+  expect(client.sendAction.mock.calls[0][0]).toEqual({
+    recipientId: RECIPIENT_ID,
+    action: 'mark_seen',
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
+test('can send typing on', () => {
+  const client = createMock('sendAction');
+
+  client.sendTypingOn({ recipientId: RECIPIENT_ID });
+
+  expect(client.sendAction.mock.calls.length).toBe(1);
+  expect(client.sendAction.mock.calls[0][0]).toEqual({
+    recipientId: RECIPIENT_ID,
+    action: 'typing_on',
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
+test('can send typing off', () => {
+  const client = createMock('sendAction');
+
+  client.sendTypingOff({ recipientId: RECIPIENT_ID });
+
+  expect(client.sendAction.mock.calls.length).toBe(1);
+  expect(client.sendAction.mock.calls[0][0]).toEqual({
+    recipientId: RECIPIENT_ID,
+    action: 'typing_off',
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
 test('can send quick replies', () => {
   const client = createMock('sendMessage');
   const text = MESSAGE;
@@ -406,6 +445,22 @@ test('can send attachment', () => {
     recipientId: RECIPIENT_ID,
     message: { attachment },
     messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
+test('can send action', () => {
+  const client = createMock('send');
+  const action = 'foo';
+
+  client.sendAction({ recipientId: RECIPIENT_ID, action });
+
+  expect(client.send.mock.calls.length).toBe(1);
+  expect(client.send.mock.calls[0][0]).toEqual({
+    messaging_type: MessengerClient.MESSAGING_TYPE_RESPONSE,
+    recipient: {
+      id: RECIPIENT_ID
+    },
+    sender_action: action
   });
 });
 
