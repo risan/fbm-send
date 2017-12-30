@@ -131,19 +131,19 @@ export default class MessengerClient {
     });
   }
 
-  sendGenericTemplate(
+  sendGeneric({
     recipientId,
     elements,
     messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.sendTemplate(
+  }) {
+    return this.sendTemplate({
       recipientId,
-      {
-        template_type: 'generic',
+      type: 'generic',
+      payload: {
         elements
       },
       messagingType
-    );
+    });
   }
 
   sendListTemplate(
