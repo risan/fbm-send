@@ -98,6 +98,31 @@ export default class MessengerClient {
     });
   }
 
+  sendReadReceipt({
+    recipientId,
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
+  }) {
+    return this.sendAction({ recipientId, action: 'mark_seen', messagingType });
+  }
+
+  sendTypingOn({
+    recipientId,
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
+  }) {
+    return this.sendAction({ recipientId, action: 'typing_on', messagingType });
+  }
+
+  sendTypingOff({
+    recipientId,
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
+  }) {
+    return this.sendAction({
+      recipientId,
+      action: 'typing_off',
+      messagingType
+    });
+  }
+
   sendQuickReplies({
     recipientId,
     text,
@@ -275,41 +300,6 @@ export default class MessengerClient {
     });
   }
 
-  sendReadReceipt(
-    recipientId,
-    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.sendAction(recipientId, 'mark_seen', messagingType);
-  }
-
-  sendTypingOn(
-    recipientId,
-    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.sendAction(recipientId, 'typing_on', messagingType);
-  }
-
-  sendTypingOff(
-    recipientId,
-    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.sendAction(recipientId, 'typing_off', messagingType);
-  }
-
-  sendAction(
-    recipientId,
-    action,
-    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.send({
-      messaging_type: messagingType,
-      recipient: {
-        id: recipientId
-      },
-      sender_action: action
-    });
-  }
-
   sendTemplate({
     recipientId,
     type,
@@ -351,6 +341,20 @@ export default class MessengerClient {
       recipientId,
       message: { attachment },
       messagingType
+    });
+  }
+
+  sendAction({
+    recipientId,
+    action,
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
+  }) {
+    return this.send({
+      messaging_type: messagingType,
+      recipient: {
+        id: recipientId
+      },
+      sender_action: action
     });
   }
 
