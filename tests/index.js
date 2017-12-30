@@ -209,6 +209,24 @@ test('can send buttons', () => {
   });
 });
 
+test('can send generic', () => {
+  const client = createMock('sendTemplate');
+  const elements = ['foo'];
+
+  client.sendGeneric({
+    recipientId: RECIPIENT_ID,
+    elements
+  });
+
+  expect(client.sendTemplate.mock.calls.length).toBe(1);
+  expect(client.sendTemplate.mock.calls[0][0]).toEqual({
+    recipientId: RECIPIENT_ID,
+    type: 'generic',
+    payload: { elements },
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
 test('can send template', () => {
   const client = createMock('sendAttachment');
   const url = 'https://example.com';
