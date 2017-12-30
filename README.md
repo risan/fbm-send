@@ -19,6 +19,7 @@ Javascript library for sending a message through Facebook Messenger send API.
     * [Interacts with Facebook Messenger Send API](#interacts-with-facebook-messenger-send-api)
     * [Send Text](#send-text)
     * [Send Attachments](#send-attachments)
+    * [Send Actions](#send-actions)
     * [Send Quick Replies](#send-quick-replies)
     * [Send Buttons](#send-buttons)
     * [Send Generic](#send-generic)
@@ -145,6 +146,29 @@ client.sendImage({
 });
 ```
 
+### Send Actions
+
+```js
+client.sendReadReceipt({ recipientId, [messagingType] });
+client.sendTypingOn({ recipientId, [messagingType] });
+client.sendTypingOff({ recipientId, [messagingType] });
+```
+
+#### Parameters:
+- **`recipientId`** (*`Integer`*): The recipient ID.
+- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
+
+#### Example
+
+```js
+client.sendTypingOn({ recipientId: 123 })
+  .then(data => {
+    setTimeout(() => {
+      client.sendTypingOff({ recipientId: 123 })
+    }, 5000);
+  });
+```
+
 ### Send Quick Replies
 
 ```js
@@ -232,7 +256,7 @@ Check the generic template [documentaion](https://developers.facebook.com/docs/m
 
 ```js
 client.sendGeneric({
-  recipientId,
+  recipientId: 123,
   elements: [{
     title: 'Do or do not. There is no try.',
     image_url: 'https://media.giphy.com/media/ArrVyXcjSzzxe/giphy-downsized.gif',
@@ -271,7 +295,7 @@ Check the list template [documentaion](https://developers.facebook.com/docs/mess
 
 ```js
 client.sendList({
-  recipientId,
+  recipientId: 123,
   topElementStyle: 'compact',
   elements: [
     {
@@ -316,7 +340,7 @@ Check the media template [documentaion](https://developers.facebook.com/docs/mes
 
 ```js
 client.sendMedia({
-  recipientId,
+  recipientId: 123,
   type: 'video',
   url: 'https://business.facebook.com/StarWars.Nordics/videos/1921975247818517',
   button: {
@@ -345,7 +369,7 @@ Check the Open Graph template [documentaion](https://developers.facebook.com/doc
 
 ```js
 client.sendOpenGraph({
-  recipientId,
+  recipientId: 123,
   url: 'https://open.spotify.com/track/7a3iXf8eqbwciDHZUbfQSQ',
   buttons: [
     {
@@ -389,7 +413,7 @@ Check the receipt template [documentaion](https://developers.facebook.com/docs/m
 
 ```js
 client.sendReceipt({
-  recipientId,
+  recipientId: 123,
   recipientName: 'Darth Vader',
   orderNumber: '123456',
   paymentMethod: 'Visa 1234',
