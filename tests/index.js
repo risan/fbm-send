@@ -253,6 +253,36 @@ test('can send list', () => {
   });
 });
 
+test('can send media', () => {
+  const client = createMock('sendTemplate');
+  const type = 'image';
+  const url = 'https://example.com';
+  const button = { foo: 'bar' };
+
+  client.sendMedia({
+    recipientId: RECIPIENT_ID,
+    type,
+    url,
+    button
+  });
+
+  expect(client.sendTemplate.mock.calls.length).toBe(1);
+  expect(client.sendTemplate.mock.calls[0][0]).toEqual({
+    recipientId: RECIPIENT_ID,
+    type: 'media',
+    payload: {
+      elements: [
+        {
+          media_type: type,
+          buttons: [button],
+          url
+        }
+      ]
+    },
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
 test('can send open graph', () => {
   const client = createMock('sendTemplate');
   const url = 'https://example.com';
