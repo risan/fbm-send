@@ -253,6 +253,33 @@ test('can send list', () => {
   });
 });
 
+test('can send open graph', () => {
+  const client = createMock('sendTemplate');
+  const url = 'https://example.com';
+  const buttons = ['foo'];
+
+  client.sendOpenGraph({
+    recipientId: RECIPIENT_ID,
+    url,
+    buttons
+  });
+
+  expect(client.sendTemplate.mock.calls.length).toBe(1);
+  expect(client.sendTemplate.mock.calls[0][0]).toEqual({
+    recipientId: RECIPIENT_ID,
+    type: 'open_graph',
+    payload: {
+      elements: [
+        {
+          url,
+          buttons
+        }
+      ]
+    },
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
 test('can send template', () => {
   const client = createMock('sendAttachment');
   const url = 'https://example.com';
