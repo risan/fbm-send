@@ -52,11 +52,9 @@ client.sendText({ recipientId: 'RECIPIENT_ID', text: 'Hello World' })
 const client = new MessengerClient({ pageAccessToken, [apiVersion] });
 ```
 
-**Required Parameters:**
-- `pageAccessToken` (`String`): The access token for the page where the Messenger bot will be used. To get your page access token, heads up to [Facebook apps](https://developers.facebook.com/apps) page and select the app that you use for your Messenger bot. Within your app page, select the **Messenger** >> **Settings** menu on the left. On this Messenger settings console, you'll find **Token Generation** section to generate the access token.
-
-**Optional Parameters:**
-- `apiVersion` (`String`): The Facebook Messenger API version to use, default to `2.11`.
+#### Parameters:
+- **`pageAccessToken`** (*`String`*): The access token for the page where the Messenger bot will be used. To get your page access token, heads up to [Facebook apps](https://developers.facebook.com/apps) page and select the app that you use for your Messenger bot. Within your app page, select the **Messenger** >> **Settings** menu on the left. On this Messenger settings console, you'll find **Token Generation** section to generate the access token.
+- **`apiVersion`** (*`String`*): The Facebook Messenger API version to use. Optional parameter, default to `2.11`.
 
 ### Messaging Type
 
@@ -79,10 +77,10 @@ This is the most basic API to allow you interact directly with Facebook Messenge
 client.send(data);
 ```
 
-**Required Parameters:**
-- `data` (`Object`): An object of payload that you need to provide to Facebook Messenger Send API.
+#### Parameters:
+- **`data`** (*`Object`*): An object of payload that you need to provide to Facebook Messenger Send API.
 
-Check the [Send API Documentation](https://developers.facebook.com/docs/messenger-platform/reference/send-api/#payload) to see all possible payload properties.
+Check out the Send API [documentation](https://developers.facebook.com/docs/messenger-platform/reference/send-api/#payload) to see all possible payload properties.
 
 #### Example
 Sending a text message using a basic `send` method:
@@ -107,9 +105,10 @@ client.send({
 client.sendText({ recipientId, text, [messagingType] });
 ```
 
-**Required Parameters:**
-- `recipientId` (`Integer`): The recipient ID.
-- `text` (`String`): The text that you want to send to the user
+#### Parameters:
+- **`recipientId`** (*`Integer`*): The recipient ID.
+- **`text`** (*`String`*): The text that you want to send to the user
+- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`
 
 #### Example
 
@@ -131,9 +130,10 @@ client.sendVideo({ recipientId, url, [messagingType] });
 client.sendFile({ recipientId, url, [messagingType] });
 ```
 
-**Required Parameters:**
-- `recipientId` (`Integer`): The recipient ID.
-- `url` (`String`): The URL of the file that you want to send
+#### Parameters:
+- **`recipientId`** (*`Integer`*): The recipient ID.
+- **`url`** (*`String`*): The URL of the file that you want to send
+- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`
 
 #### Example
 
@@ -152,15 +152,13 @@ client.sendImage({
 client.sendQuickReplies({ recipientId, text, replies [messagingType] });
 ```
 
-**Required Parameters:**
-- `recipientId` (`Integer`): The recipient ID.
-- `text` (`String`): The main text to send along with the quick replies
-- `replies` (`Array`): An array of quick reply options
+#### Parameters:
+- **`recipientId`** (*`Integer`*): The recipient ID.
+- **`text`** (*`String`*): The main text to send along with the quick replies
+- **`replies`** (*`Array`*): An array of quick reply options
+- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`
 
-Check the [quick replies documentation](https://developers.facebook.com/docs/messenger-platform/reference/send-api/quick-replies#quick_reply) to see all possible properties for `replies` parameter.
-
-**Optional Parameters:**
-- `messagingType` (`String`): The [messaging type](#messaging-type), default to `RESPONSE`.
+Check the quick replies [documentation](https://developers.facebook.com/docs/messenger-platform/reference/send-api/quick-replies#quick_reply) to see all possible properties for `replies` parameter.
 
 #### Example
 
@@ -191,12 +189,13 @@ client.sendQuickReplies({
 client.sendButtons({ recipientId, text, buttons [messagingType] });
 ```
 
-**Required Parameters:**
-- `recipientId` (`Integer`): The recipient ID.
-- `text` (`String`): The main text to send along with the buttons
-- `replies` (`Array`): An array that consist of 1-3 button objects
+#### Parameters:
+- **`recipientId`** (*`Integer`*): The recipient ID.
+- **`text`** (*`String`*): The main text to send along with the buttons
+- **`buttons`** (*`Array`*): An array that consist of 1-3 button objects
+- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`
 
-Check the [buttons documentaion](https://developers.facebook.com/docs/messenger-platform/send-messages/buttons) to see all possible button types and how to construct them.
+Check the buttons [documentaion](https://developers.facebook.com/docs/messenger-platform/send-messages/buttons) to see all possible button types and how to construct them.
 
 #### Example
 
