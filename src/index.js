@@ -171,19 +171,25 @@ export default class MessengerClient {
     });
   }
 
-  sendOpenGraphTemplate(
+  sendOpenGraph({
     recipientId,
-    elements,
+    url,
+    buttons,
     messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.sendTemplate(
+  }) {
+    return this.sendTemplate({
       recipientId,
-      {
-        template_type: 'open_graph',
-        elements
+      type: 'open_graph',
+      payload: {
+        elements: [
+          {
+            url,
+            buttons
+          }
+        ]
       },
       messagingType
-    );
+    });
   }
 
   sendReceiptTemplate(
