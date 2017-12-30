@@ -22,6 +22,8 @@ Javascript library for sending a message through Facebook Messenger send API.
     * [Send Quick Replies](#send-quick-replies)
     * [Send Buttons](#send-buttons)
     * [Send Generic](#send-generic)
+    * [Send List](#send-list)
+    * [Send Open Graph](#send-open-graph)
 
 ## Install
 
@@ -299,6 +301,38 @@ client.sendList({
           type: 'web_url',
           url: 'https://en.wikipedia.org/wiki/Star_Destroyer'
         }
+      }
+    ]
+  })
+  .then(data => console.log(data))
+  .catch(e => console.error(e));
+```
+
+### Send Open Graph
+
+```js
+client.sendOpenGraph({ recipientId, url, buttons, [messagingType] });
+```
+
+#### Parameters:
+- **`recipientId`** (*`Integer`*): The recipient ID.
+- **`url`** (*`String`*): The Open Graph URL that you want to send. Currently, only sharing songs is supported.
+- **`buttons`** (*`Array`*): An array of [button](https://developers.facebook.com/docs/messenger-platform/send-api-reference/buttons) objects to append to.
+- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
+
+Check the Open Graph template [documentaion](https://developers.facebook.com/docs/messenger-platform/reference/template/open-graph#elements) for more information.
+
+#### Example
+
+```js
+client.sendOpenGraph({
+    recipientId,
+    url: 'https://open.spotify.com/track/7a3iXf8eqbwciDHZUbfQSQ',
+    buttons: [
+      {
+        type: 'web_url',
+        url: 'https://en.wikipedia.org/wiki/The_Imperial_March',
+        title: 'Read More'
       }
     ]
   })
