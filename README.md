@@ -54,8 +54,8 @@ const client = new MessengerClient({ pageAccessToken, [apiVersion] });
 ```
 
 #### Parameters:
-- **`pageAccessToken`** (*`String`*): The access token for the page where the Messenger bot will be used. To get your page access token, heads up to [Facebook apps](https://developers.facebook.com/apps) page and select the app that you use for your Messenger bot. Within your app page, select the **Messenger** >> **Settings** menu on the left. On this Messenger settings console, you'll find **Token Generation** section to generate the access token
-- **`apiVersion`** (*`String`*): The Facebook Messenger API version to use. Optional parameter, default to `2.11`
+- **`pageAccessToken`** (*`String`*): The access token for the page where the Messenger bot will be used. To get your page access token, heads up to [Facebook apps](https://developers.facebook.com/apps) page and select the app that you use for your Messenger bot. Within your app page, select the **Messenger** >> **Settings** menu on the left. On this Messenger settings console, you'll find **Token Generation** section to generate the access token.
+- **`apiVersion`** (*`String`*): The Facebook Messenger API version to use. Optional parameter, default to `2.11`.
 
 ### Messaging Type
 
@@ -79,7 +79,7 @@ client.send(data);
 ```
 
 #### Parameters:
-- **`data`** (*`Object`*): An object of payload that you need to provide to Facebook Messenger Send API
+- **`data`** (*`Object`*): An object of payload that you need to provide to Facebook Messenger Send API.
 
 Check out the Send API [documentation](https://developers.facebook.com/docs/messenger-platform/reference/send-api/#payload) to see all possible payload properties.
 
@@ -107,9 +107,9 @@ client.sendText({ recipientId, text, [messagingType] });
 ```
 
 #### Parameters:
-- **`recipientId`** (*`Integer`*): The recipient ID
-- **`text`** (*`String`*): The text that you want to send to the user
-- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`
+- **`recipientId`** (*`Integer`*): The recipient ID.
+- **`text`** (*`String`*): The text that you want to send to the user.
+- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
 
 #### Example
 
@@ -132,9 +132,9 @@ client.sendFile({ recipientId, url, [messagingType] });
 ```
 
 #### Parameters:
-- **`recipientId`** (*`Integer`*): The recipient ID
-- **`url`** (*`String`*): The URL of the file that you want to send
-- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`
+- **`recipientId`** (*`Integer`*): The recipient ID.
+- **`url`** (*`String`*): The URL of the file that you want to send.
+- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
 
 #### Example
 
@@ -150,14 +150,14 @@ client.sendImage({
 ### Send Quick Replies
 
 ```js
-client.sendQuickReplies({ recipientId, text, replies [messagingType] });
+client.sendQuickReplies({ recipientId, text, replies, [messagingType] });
 ```
 
 #### Parameters:
-- **`recipientId`** (*`Integer`*): The recipient ID
-- **`text`** (*`String`*): The main text to send along with the quick replies
-- **`replies`** (*`Array`*): An array of quick reply options
-- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`
+- **`recipientId`** (*`Integer`*): The recipient ID.
+- **`text`** (*`String`*): The main text to send along with the quick replies.
+- **`replies`** (*`Array`*): An array of quick reply options.
+- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
 
 Check the quick replies [documentation](https://developers.facebook.com/docs/messenger-platform/reference/send-api/quick-replies#quick_reply) to see all possible properties for `replies` parameter.
 
@@ -187,14 +187,14 @@ client.sendQuickReplies({
 ### Send Buttons
 
 ```js
-client.sendButtons({ recipientId, text, buttons [messagingType] });
+client.sendButtons({ recipientId, text, buttons, [messagingType] });
 ```
 
 #### Parameters:
-- **`recipientId`** (*`Integer`*): The recipient ID
-- **`text`** (*`String`*): The main text to send along with the buttons
-- **`buttons`** (*`Array`*): An array that consist of 1-3 button objects
-- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`
+- **`recipientId`** (*`Integer`*): The recipient ID.
+- **`text`** (*`String`*): The main text to send along with the buttons.
+- **`buttons`** (*`Array`*): An array that consist of 1-3 button objects.
+- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
 
 Check the buttons [documentaion](https://developers.facebook.com/docs/messenger-platform/send-messages/buttons) to see all possible button types and how to construct them.
 
@@ -224,15 +224,15 @@ client.sendButtons({
 ### Send Generic
 
 ```js
-client.sendGeneric({ recipientId, elements [messagingType] });
+client.sendGeneric({ recipientId, elements, [messagingType] });
 ```
 
 #### Parameters:
-- **`recipientId`** (*`Integer`*): The recipient ID
-- **`elements`** (*`Array`*): An array of structured template elements that you want to send, maximum up to 10 items
-- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`
+- **`recipientId`** (*`Integer`*): The recipient ID.
+- **`elements`** (*`Array`*): An array of structured template elements that you want to send, maximum up to 10 items.
+- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
 
-Check the generic [documentaion](https://developers.facebook.com/docs/messenger-platform/reference/template/generic#elements) to see all possible element properties that you can provide.
+Check the generic template [documentaion](https://developers.facebook.com/docs/messenger-platform/reference/template/generic#elements) to see all possible element properties that you can provide.
 
 #### Example
 
@@ -255,6 +255,52 @@ client.sendGeneric({
         }
       ]
     }]
+  })
+  .then(data => console.log(data))
+  .catch(e => console.error(e));
+```
+
+### Send List
+
+```js
+client.sendList({ recipientId, elements, [topElementStyle, button, messagingType] });
+```
+
+#### Parameters:
+- **`recipientId`** (*`Integer`*): The recipient ID.
+- **`elements`** (*`Array`*): Array of objects that describe items in the list. Minimum of 2 elements must be provided, and up to 4 elements is supported.
+- **`topElementStyle`** (*`String`*): Optional parameter to set the format of the first item, it can be: `compact` or `large`.
+- **`button`** (*`Object`*): Optional [button](https://developers.facebook.com/docs/messenger-platform/send-api-reference/buttons) object to display at the bottom of the list.
+- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
+
+Check the list template [documentaion](https://developers.facebook.com/docs/messenger-platform/reference/template/list#elements) to see all possible element properties that you can provide.
+
+#### Example
+
+```js
+client.sendList({
+    recipientId,
+    topElementStyle: 'compact',
+    elements: [
+      {
+        title: 'Millennium Falcon',
+        subtitle: 'The modified YT-1300F Corellian Light Freighter',
+        image_url: 'https://media.giphy.com/media/4MFxMNhSioR3i/giphy-tumblr.gif',
+        default_action: {
+          type: 'web_url',
+          url: 'https://en.wikipedia.org/wiki/Millennium_Falcon'
+        }
+      },
+      {
+        title: 'Star Destroyer',
+        subtitle: 'The vessel of the Imperial fleet',
+        image_url: 'https://media.giphy.com/media/unK3ncdrEao2k/giphy-downsized.gif',
+        default_action: {
+          type: 'web_url',
+          url: 'https://en.wikipedia.org/wiki/Star_Destroyer'
+        }
+      }
+    ]
   })
   .then(data => console.log(data))
   .catch(e => console.error(e));
