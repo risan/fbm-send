@@ -171,6 +171,37 @@ export default class MessengerClient {
     });
   }
 
+  sendMedia({
+    recipientId,
+    type,
+    url,
+    attachmentId,
+    button,
+    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
+  }) {
+    const payload = {
+      elements: [
+        {
+          media_type: type,
+          buttons: [button]
+        }
+      ]
+    };
+
+    if (url) {
+      payload.elements[0].url = url;
+    } else {
+      payload.elements[0].attachment_id = attachmentId;
+    }
+
+    return this.sendTemplate({
+      recipientId,
+      type: 'media',
+      payload,
+      messagingType
+    });
+  }
+
   sendOpenGraph({
     recipientId,
     url,
@@ -203,21 +234,6 @@ export default class MessengerClient {
       {
         ...payload,
         template_type: 'receipt',
-        elements
-      },
-      messagingType
-    );
-  }
-
-  sendMediaTemplate(
-    recipientId,
-    elements,
-    messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.sendTemplate(
-      recipientId,
-      {
-        template_type: 'media',
         elements
       },
       messagingType
