@@ -25,6 +25,7 @@ Javascript library for sending a message through Facebook Messenger send API.
     * [Send List](#send-list)
     * [Send Media](#send-media)
     * [Send Open Graph](#send-open-graph)
+    * [Send Receipt](#send-receipt)
 
 ## Install
 
@@ -351,6 +352,62 @@ client.sendOpenGraph({
       type: 'web_url',
       url: 'https://en.wikipedia.org/wiki/The_Imperial_March',
       title: 'Read More'
+    }
+  ]
+});
+```
+
+### Send Receipt
+
+```js
+client.sendReceipt({
+  recipientId, recipientName, orderNumber, paymentMethod, summary,
+  [currency, sharable, merchantName, timestamp, elements, address, adjustments, messagingType]
+});
+```
+
+#### Required Parameters:
+- **`recipientId`** (*`Integer`*): The recipient ID.
+- **`recipientName`** (*`String`*): The recipient's name.
+- **`orderNumber`** (*`String`*): The order number, it must be unique.
+- **`paymentMethod`** (*String*): The payment method used. It's recomended to provide enough information for the customer on which payment method and account they used. It can be a custom string like `Visa 1234`.
+- **`summary`** (*Object*): The payment summary object, the only required property is the `total_cost`. Check the [summary section](https://developers.facebook.com/docs/messenger-platform/reference/template/receipt#summary) for further information.
+
+#### Optional Parameters:
+- **`currency`** (*`String`*): The currency of the payment, default to `USD`.
+- **`sharable`** (*`Boolean`*): Enable or disable native share button, default to `false`.
+- **`merchantName`** (*`String`*): The merchant's name.
+- **`timestamp`** (*`String`*): Timestamp of the order in seconds.
+- **`elements`** (*`Array`*): Array of object that describe items within the order. Check the [element section](https://developers.facebook.com/docs/messenger-platform/reference/template/receipt#elements) for more information.
+- **`address`** (*`Object`*): The shipping address of the order. Check the [address section](https://developers.facebook.com/docs/messenger-platform/reference/template/receipt#address) for more information.
+- **`adjustments`** (*`Array`*): An array of object that describe the payment adjustments, such as discount. Check the [adjustments section](https://developers.facebook.com/docs/messenger-platform/reference/template/receipt#adjustments) for more information.
+- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
+
+Check the receipt template [documentaion](https://developers.facebook.com/docs/messenger-platform/reference/template/receipt) for more information.
+
+#### Example
+
+```js
+client.sendReceipt({
+  recipientId,
+  recipientName: 'Darth Vader',
+  orderNumber: '123456',
+  paymentMethod: 'Visa 1234',
+  summary: {
+    total_cost: 12500
+  },
+  elements: [
+    {
+      title: 'Death Star',
+      image_url: 'https://upload.wikimedia.org/wikipedia/en/f/f9/Death_star1.png',
+      quantity: 1,
+      price: 10000
+    },
+    {
+      title: 'TIE Fighter',
+      image_url: 'https://free3d.com/imgd/l15332-tie-fighter-94029.jpg',
+      quantity: 5,
+      price: 500
     }
   ]
 });
