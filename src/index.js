@@ -146,21 +146,29 @@ export default class MessengerClient {
     });
   }
 
-  sendListTemplate(
+  sendList({
     recipientId,
-    topElementStyle,
     elements,
+    topElementStyle = null,
+    button = null,
     messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.sendTemplate(
+  }) {
+    const payload = { elements };
+
+    if (topElementStyle) {
+      payload.top_element_style = topElementStyle;
+    }
+
+    if (button) {
+      payload.buttons = [button];
+    }
+
+    return this.sendTemplate({
       recipientId,
-      {
-        template_type: 'list',
-        top_element_style: topElementStyle,
-        elements
-      },
+      type: 'list',
+      payload,
       messagingType
-    );
+    });
   }
 
   sendOpenGraphTemplate(
