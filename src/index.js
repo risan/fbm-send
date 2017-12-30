@@ -223,21 +223,56 @@ export default class MessengerClient {
     });
   }
 
-  sendReceiptTemplate(
+  sendReceipt({
     recipientId,
-    payload,
-    elements,
+    recipientName,
+    orderNumber,
+    paymentMethod,
+    summary,
+    currency = 'USD',
+    sharable = false,
+    merchantName = null,
+    timestamp = null,
+    elements = null,
+    address = null,
+    adjustments = null,
     messagingType = MessengerClient.MESSAGING_TYPE_RESPONSE
-  ) {
-    return this.sendTemplate(
+  }) {
+    const payload = {
+      recipient_name: recipientName,
+      order_number: orderNumber,
+      payment_method: paymentMethod,
+      summary,
+      currency,
+      sharable
+    };
+
+    if (merchantName) {
+      payload.merchant_name = merchantName;
+    }
+
+    if (timestamp) {
+      payload.timestamp = timestamp;
+    }
+
+    if (elements) {
+      payload.elements = elements;
+    }
+
+    if (address) {
+      payload.address = address;
+    }
+
+    if (adjustments) {
+      payload.adjustments = adjustments;
+    }
+
+    return this.sendTemplate({
       recipientId,
-      {
-        ...payload,
-        template_type: 'receipt',
-        elements
-      },
+      type: 'receipt',
+      payload,
       messagingType
-    );
+    });
   }
 
   sendReadReceipt(
