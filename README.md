@@ -23,6 +23,7 @@ Javascript library for sending a message through Facebook Messenger send API.
     * [Send Buttons](#send-buttons)
     * [Send Generic](#send-generic)
     * [Send List](#send-list)
+    * [Send Media](#send-media)
     * [Send Open Graph](#send-open-graph)
 
 ## Install
@@ -90,16 +91,14 @@ Sending a text message using a basic `send` method:
 
 ```js
 client.send({
-    messaging_type: Messenger.MESSAGING_TYPE_RESPONSE,
-    recipient: {
-      id: 123
-    },
-    message: {
-      text: 'May the force be with you ✨'
-    }
-  })
-  .then(data => console.log(data))
-  .catch(e => console.error(e));
+  messaging_type: Messenger.MESSAGING_TYPE_RESPONSE,
+  recipient: {
+    id: 123
+  },
+  message: {
+    text: 'May the force be with you ✨'
+  }
+});
 ```
 
 ### Send Text
@@ -117,11 +116,9 @@ client.sendText({ recipientId, text, [messagingType] });
 
 ```js
 client.sendText({
-    recipientId: 123,
-    text: 'Do or do not. There is no try.'
-  })
-  .then(data => console.log(data))
-  .catch(e => console.error(e));
+  recipientId: 123,
+  text: 'Do or do not. There is no try.'
+});
 ```
 
 ### Send Attachments
@@ -142,11 +139,9 @@ client.sendFile({ recipientId, url, [messagingType] });
 
 ```js
 client.sendImage({
-    recipientId: 123,
-    url: 'https://media.giphy.com/media/ArrVyXcjSzzxe/giphy-downsized.gif'
-  })
-  .then(data => console.log(data))
-  .catch(e => console.error(e));
+  recipientId: 123,
+  url: 'https://media.giphy.com/media/ArrVyXcjSzzxe/giphy-downsized.gif'
+});
 ```
 
 ### Send Quick Replies
@@ -167,23 +162,21 @@ Check the quick replies [documentation](https://developers.facebook.com/docs/mes
 
 ```js
 client.sendQuickReplies({
-    recipientId: 123,
-    text: 'Choose your favorite spacecraft:',
-    replies: [
-      {
-        content_type: 'text',
-        title: 'Millennium Falcon',
-        payload: 'MILLENNIUM_FALCON_IS_SELECTED'
-      },
-      {
-        content_type: 'text',
-        title: 'Star Destroyer',
-        payload: 'STAR_DESTROYER_IS_SELECTED'
-      }
-    ]
-  })
-  .then(data => console.log(data))
-  .catch(e => console.error(e));
+  recipientId: 123,
+  text: 'Choose your favorite spacecraft:',
+  replies: [
+    {
+      content_type: 'text',
+      title: 'Millennium Falcon',
+      payload: 'MILLENNIUM_FALCON_IS_SELECTED'
+    },
+    {
+      content_type: 'text',
+      title: 'Star Destroyer',
+      payload: 'STAR_DESTROYER_IS_SELECTED'
+    }
+  ]
+});
 ```
 
 ### Send Buttons
@@ -204,23 +197,21 @@ Check the buttons [documentaion](https://developers.facebook.com/docs/messenger-
 
 ```js
 client.sendButtons({
-    recipientId: 123,
-    text: 'Check out for more detail',
-    buttons: [
-      {
-        type: 'web_url',
-        url: 'http://www.starwars.com',
-        title: 'Star Wars Homepage'
-      },
-      {
-        type: 'web_url',
-        url: 'https://en.wikipedia.org/wiki/Star_Wars',
-        title: 'Star Wars Wikipedia'
-      }
-    ]
-  })
-  .then(data => console.log(data))
-  .catch(e => console.error(e));
+  recipientId: 123,
+  text: 'Check out for more detail',
+  buttons: [
+    {
+      type: 'web_url',
+      url: 'http://www.starwars.com',
+      title: 'Star Wars Homepage'
+    },
+    {
+      type: 'web_url',
+      url: 'https://en.wikipedia.org/wiki/Star_Wars',
+      title: 'Star Wars Wikipedia'
+    }
+  ]
+});
 ```
 
 ### Send Generic
@@ -240,26 +231,24 @@ Check the generic template [documentaion](https://developers.facebook.com/docs/m
 
 ```js
 client.sendGeneric({
-    recipientId,
-    elements: [{
-      title: 'Do or do not. There is no try.',
-      image_url: 'https://media.giphy.com/media/ArrVyXcjSzzxe/giphy-downsized.gif',
-      buttons: [
-        {
-          type: 'postback',
-          title: 'Do',
-          payload: 'DO_IS_CLICKED',
-        },
-        {
-          type: 'postback',
-          title: 'Try',
-          payload: 'TRY_IS_CLICKED',
-        }
-      ]
-    }]
-  })
-  .then(data => console.log(data))
-  .catch(e => console.error(e));
+  recipientId,
+  elements: [{
+    title: 'Do or do not. There is no try.',
+    image_url: 'https://media.giphy.com/media/ArrVyXcjSzzxe/giphy-downsized.gif',
+    buttons: [
+      {
+        type: 'postback',
+        title: 'Do',
+        payload: 'DO_IS_CLICKED',
+      },
+      {
+        type: 'postback',
+        title: 'Try',
+        payload: 'TRY_IS_CLICKED',
+      }
+    ]
+  }]
+});
 ```
 
 ### Send List
@@ -281,31 +270,60 @@ Check the list template [documentaion](https://developers.facebook.com/docs/mess
 
 ```js
 client.sendList({
-    recipientId,
-    topElementStyle: 'compact',
-    elements: [
-      {
-        title: 'Millennium Falcon',
-        subtitle: 'The modified YT-1300F Corellian Light Freighter',
-        image_url: 'https://media.giphy.com/media/4MFxMNhSioR3i/giphy-tumblr.gif',
-        default_action: {
-          type: 'web_url',
-          url: 'https://en.wikipedia.org/wiki/Millennium_Falcon'
-        }
-      },
-      {
-        title: 'Star Destroyer',
-        subtitle: 'The vessel of the Imperial fleet',
-        image_url: 'https://media.giphy.com/media/unK3ncdrEao2k/giphy-downsized.gif',
-        default_action: {
-          type: 'web_url',
-          url: 'https://en.wikipedia.org/wiki/Star_Destroyer'
-        }
+  recipientId,
+  topElementStyle: 'compact',
+  elements: [
+    {
+      title: 'Millennium Falcon',
+      subtitle: 'The modified YT-1300F Corellian Light Freighter',
+      image_url: 'https://media.giphy.com/media/4MFxMNhSioR3i/giphy-tumblr.gif',
+      default_action: {
+        type: 'web_url',
+        url: 'https://en.wikipedia.org/wiki/Millennium_Falcon'
       }
-    ]
-  })
-  .then(data => console.log(data))
-  .catch(e => console.error(e));
+    },
+    {
+      title: 'Star Destroyer',
+      subtitle: 'The vessel of the Imperial fleet',
+      image_url: 'https://media.giphy.com/media/unK3ncdrEao2k/giphy-downsized.gif',
+      default_action: {
+        type: 'web_url',
+        url: 'https://en.wikipedia.org/wiki/Star_Destroyer'
+      }
+    }
+  ]
+});
+```
+
+### Send Media
+
+```js
+client.sendMedia({ recipientId, type, url, attachmentId, button, [messagingType] });
+```
+
+#### Parameters:
+- **`recipientId`** (*`Integer`*): The recipient ID.
+- **`type`** (*`String`*): The type of the media, it can be `image` or `video`.
+- **`url`** (*`String`*): The Facebook URL of the media, leave it empty if you want to set the `attachmentId` instead. Note that it must be a Facebook URL, check the [documentation](https://developers.facebook.com/docs/messenger-platform/send-messages/template/media#facebook_url) for more info.
+- **`attachmentId`** (*`String`*): The attachment ID, it will be ignored if you set the `url` parameter.
+- **`button`** (*`Object`*): An object of [button](https://developers.facebook.com/docs/messenger-platform/send-api-reference/buttons).
+- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
+
+Check the media template [documentaion](https://developers.facebook.com/docs/messenger-platform/reference/template/media#elements) for more information.
+
+#### Example
+
+```js
+client.sendMedia({
+  recipientId,
+  type: 'video',
+  url: 'https://business.facebook.com/StarWars.Nordics/videos/1921975247818517',
+  button: {
+    type: 'web_url',
+    url: 'https://en.wikipedia.org/wiki/Star_Wars:_The_Last_Jedi',
+    title: 'Read More'
+  }
+});
 ```
 
 ### Send Open Graph
@@ -326,18 +344,16 @@ Check the Open Graph template [documentaion](https://developers.facebook.com/doc
 
 ```js
 client.sendOpenGraph({
-    recipientId,
-    url: 'https://open.spotify.com/track/7a3iXf8eqbwciDHZUbfQSQ',
-    buttons: [
-      {
-        type: 'web_url',
-        url: 'https://en.wikipedia.org/wiki/The_Imperial_March',
-        title: 'Read More'
-      }
-    ]
-  })
-  .then(data => console.log(data))
-  .catch(e => console.error(e));
+  recipientId,
+  url: 'https://open.spotify.com/track/7a3iXf8eqbwciDHZUbfQSQ',
+  buttons: [
+    {
+      type: 'web_url',
+      url: 'https://en.wikipedia.org/wiki/The_Imperial_March',
+      title: 'Read More'
+    }
+  ]
+});
 ```
 
 ## License
