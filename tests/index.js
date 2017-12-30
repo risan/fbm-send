@@ -227,6 +227,32 @@ test('can send generic', () => {
   });
 });
 
+test('can send list', () => {
+  const client = createMock('sendTemplate');
+  const elements = ['foo'];
+  const topElementStyle = 'bar';
+  const button = { baz: 'qux' };
+
+  client.sendList({
+    recipientId: RECIPIENT_ID,
+    elements,
+    topElementStyle,
+    button
+  });
+
+  expect(client.sendTemplate.mock.calls.length).toBe(1);
+  expect(client.sendTemplate.mock.calls[0][0]).toEqual({
+    recipientId: RECIPIENT_ID,
+    type: 'list',
+    payload: {
+      elements,
+      top_element_style: topElementStyle,
+      buttons: [button]
+    },
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
 test('can send template', () => {
   const client = createMock('sendAttachment');
   const url = 'https://example.com';
