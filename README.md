@@ -32,14 +32,14 @@ $ npm install axios messenger-client
 
 ## Basic Usage
 
-Here's a basic usage on sending a text reply to the user identifed by `RECIPIENT_ID`.
+Here's a basic usage on sending a text reply to the user identifed by and id of `123`.
 
 ```js
 import MessengerClient from 'messenger-client';
 
 const client = new MessengerClient({ pageAccessToken: 'YOUR_PAGE_ACCESS_TOKEN' });
 
-client.sendText({ recipientId: 'RECIPIENT_ID', text: 'Hello World' })
+client.sendText({ recipientId: 123, text: 'Hello World 🌎' })
   .then(data => console.log(data))
   .catch(e => console.error(e.message));
 ```
@@ -58,7 +58,7 @@ const client = new MessengerClient({ pageAccessToken, [apiVersion] });
 
 ### Messaging Type
 
-As of the release of Messenger Platform v2.2, the Send API requires you to provide the `messaging_type` property. You can check all possible values for `messaging_type` [here](https://developers.facebook.com/docs/messenger-platform/send-messages#messaging_types). You can pass the `messagingType` property to all send methods and if you not set it, it will be default to `RESPONSE`.
+As of the release of Messenger Platform v2.2, the Send API requires you to provide the `messaging_type` property. You can check all possible values for `messaging_type` in the [documentation](https://developers.facebook.com/docs/messenger-platform/send-messages#messaging_types). You can pass the `messagingType` property to all send methods and if you not set it, it will be default to `RESPONSE`.
 
 This package also provides static properties that you can use to represent the messaging type value:
 
@@ -89,10 +89,10 @@ Sending a text message using a basic `send` method:
 client.send({
     messaging_type: Messenger.MESSAGING_TYPE_RESPONSE,
     recipient: {
-      id: 'RECIPIENT_ID'
+      id: 123
     },
     message: {
-      text: 'Hello World'
+      text: 'May the force be with you ✨'
     }
   })
   .then(data => console.log(data))
@@ -114,8 +114,8 @@ client.sendText({ recipientId, text, [messagingType] });
 
 ```js
 client.sendText({
-    recipientId: 'RECIPIENT_ID',
-    text: 'Hello World'
+    recipientId: 123,
+    text: 'Do or do not. There is no try.'
   })
   .then(data => console.log(data))
   .catch(e => console.error(e));
@@ -139,8 +139,8 @@ client.sendFile({ recipientId, url, [messagingType] });
 
 ```js
 client.sendImage({
-    recipientId: 'RECIPIENT_ID',
-    url: 'https://example.com/cat.gif'
+    recipientId: 123,
+    url: 'https://media.giphy.com/media/ArrVyXcjSzzxe/giphy-downsized.gif'
   })
   .then(data => console.log(data))
   .catch(e => console.error(e));
@@ -164,18 +164,18 @@ Check the quick replies [documentation](https://developers.facebook.com/docs/mes
 
 ```js
 client.sendQuickReplies({
-    recipientId: 'RECIPIENT_ID',
-    text: 'Choose your favorite color',
+    recipientId: 123,
+    text: 'Choose your favorite spacecraft:',
     replies: [
       {
         content_type: 'text',
-        title: 'Red',
-        payload: 'RED_IS_SELECTED'
+        title: 'Millennium Falcon',
+        payload: 'MILLENNIUM_FALCON_IS_SELECTED'
       },
       {
         content_type: 'text',
-        title: 'Green',
-        payload: 'GREEN_IS_SELECTED'
+        title: 'Star Destroyer',
+        payload: 'STAR_DESTROYER_IS_SELECTED'
       }
     ]
   })
@@ -201,18 +201,18 @@ Check the buttons [documentaion](https://developers.facebook.com/docs/messenger-
 
 ```js
 client.sendButtons({
-    recipientId: 'RECIPIENT_ID',
-    text: 'Choose your favorite color',
+    recipientId: 123,
+    text: 'Check out for more detail',
     buttons: [
       {
         type: 'web_url',
-        url: 'https://example.com',
-        title: 'Open Web URL'
+        url: 'http://www.starwars.com',
+        title: 'Star Wars Homepage'
       },
       {
-        type: 'postback',
-        title: 'Trigger Postback',
-        payload: 'POSTBACK_BUTTON_CLICKED'
+        type: 'web_url',
+        url: 'https://en.wikipedia.org/wiki/Star_Wars',
+        title: 'Star Wars Wikipedia'
       }
     ]
   })
