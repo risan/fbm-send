@@ -310,6 +310,49 @@ test('can send open graph', () => {
   });
 });
 
+test('can send receipt', () => {
+  const client = createMock('sendTemplate');
+
+  client.sendReceipt({
+    recipientId: RECIPIENT_ID,
+    recipientName: 'John Doe',
+    orderNumber: '12345',
+    paymentMethod: 'Visa',
+    summary: {
+      total_cost: 100
+    },
+    currency: 'USD',
+    sharable: true,
+    merchantName: 'The Empire',
+    timestamp: '12345',
+    elements: ['foo'],
+    address: { foo: 'bar' },
+    adjustments: ['foo']
+  });
+
+  expect(client.sendTemplate.mock.calls.length).toBe(1);
+  expect(client.sendTemplate.mock.calls[0][0]).toEqual({
+    recipientId: RECIPIENT_ID,
+    type: 'receipt',
+    payload: {
+      recipient_name: 'John Doe',
+      order_number: '12345',
+      payment_method: 'Visa',
+      summary: {
+        total_cost: 100
+      },
+      currency: 'USD',
+      sharable: true,
+      merchant_name: 'The Empire',
+      timestamp: '12345',
+      elements: ['foo'],
+      address: { foo: 'bar' },
+      adjustments: ['foo']
+    },
+    messagingType: MessengerClient.MESSAGING_TYPE_RESPONSE
+  });
+});
+
 test('can send template', () => {
   const client = createMock('sendAttachment');
   const url = 'https://example.com';
