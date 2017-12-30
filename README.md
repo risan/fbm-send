@@ -1,11 +1,11 @@
 # Messenger Client
 
-[![Latest Stable Version](https://img.shields.io/npm/v/messenger-client.svg?style=flat-square)](https://www.npmjs.com/package/messenger-client)
-[![Build Status](https://img.shields.io/travis/risan/messenger-client.svg?style=flat-square)](https://travis-ci.org/risan/messenger-client)
-[![Test Coverage](https://img.shields.io/codeclimate/c/risan/messenger-client.svg?style=flat-square)](https://codeclimate.com/github/risan/messenger-client/test_coverage)
-[![Maintainability](https://img.shields.io/codeclimate/maintainability/risan/messenger-client.svg?style=flat-square)](https://codeclimate.com/github/risan/messenger-client/maintainability)
-[![Code Style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/risan/messenger-client)
-[![License](https://img.shields.io/npm/l/messenger-client.svg?style=flat-square)](https://www.npmjs.com/package/messenger-client)
+[![Latest Stable Version](https://img.shields.io/npm/v/messenger-client.svg)](https://www.npmjs.com/package/messenger-client)
+[![Build Status](https://travis-ci.org/risan/messenger-client.svg?branch=master)](https://travis-ci.org/risan/messenger-client)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/8e8e182d7cd4c25f471a/test_coverage)](https://codeclimate.com/github/risan/messenger-client/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/8e8e182d7cd4c25f471a/maintainability)](https://codeclimate.com/github/risan/messenger-client/maintainability)
+[![Code Style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/risan/messenger-client)
+[![License](https://img.shields.io/npm/l/messenger-client.svg)](https://www.npmjs.com/package/messenger-client)
 
 Javascript library for sending a message through Facebook Messenger send API.
 
