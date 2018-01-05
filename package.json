@@ -1,25 +1,20 @@
 {
   "name": "messenger-client",
-  "version": "1.0.0",
   "description": "A library for sending a message through Facebook Messenger send API",
+  "version": "1.0.0",
+  "license": "MIT",
+  "homepage": "https://github.com/risan/messenger-client#readme",
   "author": {
     "name": "Risan Bagja Pradana",
     "email": "risanbagja@gmail.com",
     "url": "https://risan.io"
   },
-  "main": "dist/messenger-client.cjs.js",
-  "module": "dist/messenger-client.esm.js",
-  "engines": {
-    "node": ">= 6"
-  },
-  "homepage": "https://github.com/risan/messenger-client#readme",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/risan/messenger-client/issues"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/risan/messenger-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/risan/messenger-client/issues"
   },
   "keywords": [
     "messenger",
@@ -27,6 +22,11 @@
     "chat",
     "bot"
   ],
+  "main": "dist/messenger-client.cjs.js",
+  "module": "dist/messenger-client.esm.js",
+  "engines": {
+    "node": ">= 6"
+  },
   "scripts": {
     "build": "NODE_ENV=build rollup -c",
     "dev": "NODE_ENV=build rollup -c -w",
