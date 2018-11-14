@@ -1,13 +1,13 @@
 {
   "name": "messenger-client",
-  "description": "A library for sending a message through Facebook Messenger send API",
+  "description": "Facebook Messenger send API client",
   "version": "1.0.1",
   "license": "MIT",
   "homepage": "https://github.com/risan/messenger-client#readme",
   "author": {
     "name": "Risan Bagja Pradana",
     "email": "risanbagja@gmail.com",
-    "url": "https://risan.io"
+    "url": "https://bagja.net"
   },
   "repository": {
     "type": "git",
@@ -17,24 +17,21 @@
     "url": "https://github.com/risan/messenger-client/issues"
   },
   "keywords": [
-    "messenger",
     "facebook",
+    "messenger",
+    "send-api",
     "chat",
     "bot"
   ],
-  "main": "dist/messenger-client.cjs.js",
-  "module": "dist/messenger-client.esm.js",
+  "main": "src/index",
   "engines": {
-    "node": ">= 6"
+    "node": ">=8.0.0"
   },
   "scripts": {
-    "build": "NODE_ENV=build rollup -c",
-    "dev": "NODE_ENV=build rollup -c -w",
-    "lint": "eslint src",
-    "lint-fix": "eslint src --fix",
-    "prepublishOnly": "npm run test && npm run build",
-    "prettier": "prettier --write '{src,tests}/**/*.js'",
-    "test": "NODE_ENV=jest jest"
+    "lint": "eslint ./",
+    "lint-fix": "eslint ./ --fix",
+    "prepublishOnly": "npm run lint && npm run test",
+    "test": "jest"
   },
   "dependencies": {},
   "devDependencies": {}
