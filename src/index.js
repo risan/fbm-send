@@ -33,6 +33,100 @@ class FbmSend {
   }
 
   /**
+   * Send image.
+   *
+   * @param {String|stream.Readable} file
+   * @param {Object} options
+   * @return {Object}
+   */
+  async image(file, options) {
+    return this.attachment(file, { ...options, type: "image" });
+  }
+
+  /**
+   * Send video.
+   *
+   * @param {String|stream.Readable} file
+   * @param {Object} options
+   * @return {Object}
+   */
+  async video(file, options) {
+    return this.attachment(file, { ...options, type: "video" });
+  }
+
+  /**
+   * Send audio.
+   *
+   * @param {String|stream.Readable} file
+   * @param {Object} options
+   * @return {Object}
+   */
+  async audio(file, options) {
+    return this.attachment(file, { ...options, type: "audio" });
+  }
+
+  /**
+   * Send attachment.
+   *
+   * @param {String|stream.Readable} file
+   * @param {String} options.type
+   * @param {Boolean} options.isReusable
+   * @param {String|Object} options.to
+   * @param {String} options.messagingType
+   * @return {Object}
+   */
+  async attachment(
+    file,
+    { type = "file", isReusable = false, to, messagingType = RESPONSE }
+  ) {
+    const options = {
+      recipient: to,
+      messaging_type: messagingType,
+      message: {
+        attachment: {
+          type,
+          payload: {
+            is_reusable: isReusable
+          }
+        }
+      }
+    };
+
+    if (typeof file === "string") {
+      options.message.attachment.payload.url = file;
+    } else {
+      options.filedata = file;
+      options.formData = true;
+    }
+
+    return this.request(options);
+  }
+
+  /**
+   * Send attachment id.
+   *
+   * @param {String} id
+   * @param {String} options.type
+   * @param {String|Object} options.to
+   * @param {String} options.messagingType
+   * @return {Object}
+   */
+  async attachmentId(id, { type = "file", to, messagingType = RESPONSE }) {
+    return this.request({
+      recipient: to,
+      messaging_type: messagingType,
+      message: {
+        attachment: {
+          type,
+          payload: {
+            attachment_id: id
+          }
+        }
+      }
+    });
+  }
+
+  /**
    * Send HTTP request.
    *
    * @param {String|Object} options.recipient
