@@ -1,4 +1,4 @@
-/* global test:false, expect:false */;
+/* global test:false, expect:false */
 const messagingTypes = require("../src/messaging-types");
 
 test("it has all supported messaging types", () => {
