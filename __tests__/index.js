@@ -1,9 +1,10 @@
 /* global jest:false, beforeEach:false, test:false, expect:false */
-const stream = require("stream");
+const fs = require("fs");
 const FbmSend = require("../src");
 const request = require("../src/request");
 const { RESPONSE, UPDATE } = require("../src/messaging-types");
 
+jest.mock("fs");
 jest.mock("../src/request");
 
 let fbmSend = null;
@@ -138,18 +139,21 @@ test("it can send attachment url", async () => {
 test("it can send attachment file", async () => {
   fbmSend.request = mockFbmRequest();
 
-  const file = new stream.Readable();
+  fs.createReadStream = jest.fn();
+  fs.createReadStream.mockReturnValue("readable-stream");
 
-  await fbmSend.attachment(file, {
+  await fbmSend.attachment("test.txt", {
     ...requestOptions,
     type: "file",
     isReusable: false
   });
 
+  expect(fs.createReadStream).toHaveBeenCalledWith("test.txt");
+
   expect(fbmSend.request).toHaveBeenCalledWith({
     ...requestArgs,
     formData: true,
-    filedata: file,
+    filedata: "readable-stream",
     message: {
       attachment: {
         type: "file",

@@ -1,3 +1,5 @@
+const fs = require("fs");
+const isUrl = require("./is-url");
 const request = require("./request");
 const { RESPONSE } = require("./messaging-types");
 
@@ -92,10 +94,10 @@ class FbmSend {
       }
     };
 
-    if (typeof file === "string") {
+    if (isUrl(file)) {
       options.message.attachment.payload.url = file;
     } else {
-      options.filedata = file;
+      options.filedata = fs.createReadStream(file);
       options.formData = true;
     }
 
