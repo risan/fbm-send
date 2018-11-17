@@ -26,6 +26,10 @@ const request = async ({
     body: formData ? toFormData(body) : body
   });
 
+  if (formData && typeof response.body === "string") {
+    return JSON.parse(response.body);
+  }
+
   return response.body;
 };
 

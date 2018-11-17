@@ -38,13 +38,17 @@ test("it can receive API version argument", async () => {
 });
 
 test("it can receive form-data", async () => {
-  toFormData.mockReturnValue("form-data");
+  const body = { foo: "bar" };
 
-  await request({ ...defaultOptions, formData: true });
+  toFormData.mockReturnValue("form-data");
+  got.post.mockResolvedValue({ body: JSON.stringify(body) });
+
+  const result = await request({ ...defaultOptions, formData: true });
 
   const secondArgs = got.post.mock.calls[0][1];
 
   expect(toFormData).toHaveBeenCalledWith("foo");
   expect(secondArgs).toHaveProperty("json", false);
   expect(secondArgs).toHaveProperty("body", "form-data");
+  expect(result).toEqual(body);
 });
