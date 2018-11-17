@@ -89,8 +89,8 @@ new FbmSend([{
 
 #### Parameters
 
-* `**accessToken**` (optional `*String*`): The Facebook page access token, default to `process.env.FB_PAGE_ACCESS_TOKEN`.
-* `**version**` (optional `*String*`): The Facebook Graph API version, default to `3.2`.
+* **`accessToken`** (optional *`String`*): The Facebook page access token, default to `process.env.FB_PAGE_ACCESS_TOKEN`.
+* **`version`** (optional *`String`*): The Facebook Graph API version, default to `3.2`.
 
 ### Send Request
 
@@ -107,10 +107,10 @@ const response = await request({
 
 #### Parameters
 
-* `**recipient**` (`*String*`|`*Object*`): The message [recipient](#recipient).
-* `**messaging_type**` (optional `*String*`): The [messaging type](#messaging-type), default to `RESPONSE`.
-* `**formData**` (optional `*Boolean*`): Send the request as a `multipart/form-data` (for uploading a local file), default to `false`.
-* `**body**` (`Object`): The request payload to send.
+* **`recipient`** (*`String`*|*`Object`*): The message [recipient](#recipient).
+* **`messaging_type`** (optional *`String`*): The [messaging type](#messaging-type), default to `RESPONSE`.
+* **`formData`** (optional *`Boolean`*): Send the request as a `multipart/form-data` (for uploading a local file), default to `false`.
+* **`body`** (`Object`): The request payload to send.
 
 #### Recipient
 
@@ -203,9 +203,9 @@ const response = await fbmSend.text(text, {
 
 #### Parameters
 
-* `**text**` (`*String*`): The text to send.
-* `**to**` (`*String*`|`*Object*`): The [recipient](#recipient).
-* `**messagingType**` (optional `*String*`): The [messaging type](#messaging-type), default to `RESPONSE`.
+* **`text`** (*`String`*): The text to send.
+* **`to`** (*`String`*|*`Object`*): The [recipient](#recipient).
+* **`messagingType`** (optional *`String`*): The [messaging type](#messaging-type), default to `RESPONSE`.
 
 #### Examples
 
@@ -241,11 +241,11 @@ const response = await fbmSend.attachment(file, {
 
 #### Parameters
 
-* `**file**` (`*String*`): The remote URL of the file or the local file path.
-* `**to**` (`*String*`|`*Object*`): The [recipient](#recipient).
-* `**messagingType**` (optional `*String*`): The [messaging type](#messaging-type), default to `RESPONSE`.
-* `**type**` (optional `*String*`): The type of the attachment: `file`, `image`, `video`, or `audio`. Default to `file`.
-* `**isReusable**` (optional `*Boolean*`): Set to `true` to make the attachment reusable (no need to re-upload it again). Default to `false`.
+* **`file`** (*`String`*): The remote URL of the file or the local file path.
+* **`to`** (*`String`*|*`Object`*): The [recipient](#recipient).
+* **`messagingType`** (optional *`String`*): The [messaging type](#messaging-type), default to `RESPONSE`.
+* **`type`** (optional *`String`*): The type of the attachment: `file`, `image`, `video`, or `audio`. Default to `file`.
+* **`isReusable`** (optional *`Boolean`*): Set to `true` to make the attachment reusable (no need to re-upload it again). Default to `false`.
 
 #### Examples
 
@@ -309,10 +309,10 @@ const response = await fbmSend.audio(file, {
 
 #### Parameters
 
-* `**file**` (`*String*`): The remote URL of the file or the local file path.
-* `**to**` (`*String*`|`*Object*`): The [recipient](#recipient).
-* `**messagingType**` (optional `*String*`): The [messaging type](#messaging-type), default to `RESPONSE`.
-* `**isReusable**` (optional `*Boolean*`): Set to `true` to make the attachment reusable (no need to re-upload it again). Default to `false`.
+* **`file`** (*`String`*): The remote URL of the file or the local file path.
+* **`to`** (*`String`*|*`Object`*): The [recipient](#recipient).
+* **`messagingType`** (optional *`String`*): The [messaging type](#messaging-type), default to `RESPONSE`.
+* **`isReusable`** (optional *`Boolean`*): Set to `true` to make the attachment reusable (no need to re-upload it again). Default to `false`.
 
 #### Examples
 
