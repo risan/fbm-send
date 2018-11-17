@@ -21,7 +21,7 @@ $ yarn add fbm-send
 
 ## Quick Start
 
-You can use the [fbm-webhook](https://github.com/risan/fbm-webhook) module to listen to the Facebook Messenger webhook events.
+Use the [`fbm-webhook`](https://github.com/risan/fbm-webhook) module for handling the Facebook Messenger [webhook events](https://developers.facebook.com/docs/messenger-platform/reference/webhook-events/).
 
 ```js
 const FbmSend = require("fbm-send");
@@ -55,75 +55,30 @@ webhook.listen(3000, () => console.log("Server is running on port: 3000"));
 ```
 
 * `accessToken`: Your Facebook page access token, default to `process.env.FB_PAGE_ACCESS_TOKEN`.
-* `version`: The Facebook Graph API version to use, default to `3.2`.
+* `version`: The Facebook Graph API version, default to `3.2`.
 
-## Recipe
-
-### Store Page Access Token as Environment Variables
-
-By default, `fbm-send` will look for FB_PAGE_ACCESS_TOKEN on the environment variables. If you set this environment variable, you don't have to pass anything:
+You can use the `try...catch` block to catch the API error response:
 
 ```js
-const FbmSend = require("fbm-send");
-
-const fbmSend = new FbmSend();
-
-// Is equal to
-const fbmSend = new FbmSend({
-  accessToken: process.env.FB_PAGE_ACCESS_TOKEN
-});
-```
-
-### Send File Attachment
-
-```js
-const response = await fbmSend.attachment("https://example.com/file.txt", {
-  to: event.sender
-});
-```
-
-You can also send a local file:
-
-```js
-const fs = require("fs");
-
-const myFile = fs.createReadStream(`${__dirname}/test.txt`)
-
-const response = await fbmSend.attachment(myFile, {
-  to: event.sender
-});
-```
-
-### Send Image/Video/Audio File
-
-You can pass the `type` option to the `attachment` method:
-
-```js
-const response = await fbmSend.attachment("https://example.com/photo.jpg", {
-  to: event.sender,
-  type: "image" // possible value: file (default), image, video, audio
-});
-```
-
-There are also `image`, `video`, and `audio` methods:
-
-```js
-const response = await fbmSend.image("https://example.com/photo.jpg", {
-  to: event.sender
-});
-
-const response = await fbmSend.video("https://example.com/video.mp4", {
-  to: event.sender
-});
-
-const response = await fbmSend.audio("https://example.com/audio.mp3", {
-  to: event.sender
-});
+try {
+  await fbmSend.request({
+    recipient: event.sender,
+    message: {
+      text: "Hello World!"
+    }
+  });
+} catch(error) {
+  if (error.hasOwnProperty("response")) {
+    console.log(error.response); // The API error response object.
+  }
+}
 ```
 
 ## API
 
 ### Constructor
+
+Create a new `fbm-send` instance.
 
 ```js
 new FbmSend([{
@@ -134,10 +89,12 @@ new FbmSend([{
 
 #### Parameters
 
-* `accessToken` (optional `String`): The Facebook page access token, default to `process.env.FB_PAGE_ACCESS_TOKEN`.
-* `version` (optional `String`): The Facebook Graph API version, default to `3.2`.
+* `**accessToken**` (optional `*String*`): The Facebook page access token, default to `process.env.FB_PAGE_ACCESS_TOKEN`.
+* `**version**` (optional `*String*`): The Facebook Graph API version, default to `3.2`.
 
-### `request`
+### Send Request
+
+Use the `request` method to send an HTTP request to the Send API. All other methods are just a wrapper around this method.
 
 ```js
 const response = await request({
@@ -150,14 +107,230 @@ const response = await request({
 
 #### Parameters
 
-* `recipient` (`String`|`Object`): The message recipient id (either `PSID`, `phone_number`, or `user_ref`). It can also be a [`recipient`](https://developers.facebook.com/docs/messenger-platform/reference/send-api#recipient) object.
-* `messaging_type` (optional `String`): The [messaging type](https://developers.facebook.com/docs/messenger-platform/send-messages#messaging_types), default to `RESPONSE`.
-* `formData` (optional `Boolean`): Send the request as a `multipart/form-data` (for uploading a local file), default to `false`.
-* `body` (`Object`): The request payload to send.
+* `**recipient**` (`*String*`|`*Object*`): The message [recipient](#recipient).
+* `**messaging_type**` (optional `*String*`): The [messaging type](#messaging-type), default to `RESPONSE`.
+* `**formData**` (optional `*Boolean*`): Send the request as a `multipart/form-data` (for uploading a local file), default to `false`.
+* `**body**` (`Object`): The request payload to send.
+
+#### Recipient
+
+The recipient can be a `String`: `PSID`, `phone_number`, or a `user_ref`.
+
+It can also be an `Object` as defined in the documentation: [recipient object](https://developers.facebook.com/docs/messenger-platform/reference/send-api#recipient).
+
+```js
+// Recipient as a string.
+const recipient = "1234567"; // PSID, phone_number, or user_ref
+
+// Equals to recipient as an object.
+const recipient = {
+  id: "1234567"
+}
+```
+
+#### Messaging Type
+
+As of Graph API version `2.2`, you're required to pass the `messaging_type` (`String`). There are three supported values for `messaging_type`:
+
+* `RESPONSE` (default value)
+* `UPDATE`
+* `MESSAGE_TAG`
+
+Read more in the [messaging type documentation](https://developers.facebook.com/docs/messenger-platform/send-messages#messaging_types).
 
 #### Return
 
 It returns a `Promise` which when resolved contains a response from the API.
+
+#### Examples
+
+Send a simple text to the user:
+
+```js
+const response = await fbmSend.request({
+  recipient: "123456",
+  message: {
+    text: "Hello World!"
+  }
+});
+
+// Equals to:
+const response = await fbmSend.request({
+  recipient: {
+    id: "123456"
+  },
+  messaging_type = "RESPONSE",
+  message: {
+    text: "Hello World!"
+  }
+});
+```
+
+Send a file from a local filesystem:
+
+```js
+const fs = require("fs");
+
+const myFile = fs.createReadStream(`${__dirname}/test.txt`);
+
+const response = await fbmSend.request({
+  recipient: "123456",
+  message: {
+    attachment: {
+      type: "file",
+      payload: {
+        is_reusable: true
+      }
+    }
+  },
+  filedata: myFile,
+  formData: true // Must be set to TRUE!
+});
+```
+
+Check the [Send Attachment](#send-attachment) feature for more simpler approach.
+
+### Send Text
+
+Send a plain text to the user:
+
+```js
+const response = await fbmSend.text(text, {
+  to,
+  messagingType: "RESPONSE"
+});
+```
+
+#### Parameters
+
+* `**text**` (`*String*`): The text to send.
+* `**to**` (`*String*`|`*Object*`): The [recipient](#recipient).
+* `**messagingType**` (optional `*String*`): The [messaging type](#messaging-type), default to `RESPONSE`.
+
+#### Examples
+
+```js
+const response = await fbmSend.text("Hello World!", {
+  to: "123456"
+});
+```
+
+Overriding the default messaging type:
+
+```js
+const { UPDATE } from "fbm-send/messaging-types";
+
+const response = await fbmSend.text("Hello World!", {
+  to: "123456",
+  messagingType: UPDATE
+});
+```
+
+### Send Attachment
+
+Send an attachment to the user:
+
+```js
+const response = await fbmSend.attachment(file, {
+  to,
+  messagingType = "RESPONSE",
+  type = "file",
+  isReusable = false
+});
+```
+
+#### Parameters
+
+* `**file**` (`*String*`): The remote URL of the file or the local file path.
+* `**to**` (`*String*`|`*Object*`): The [recipient](#recipient).
+* `**messagingType**` (optional `*String*`): The [messaging type](#messaging-type), default to `RESPONSE`.
+* `**type**` (optional `*String*`): The type of the attachment: `file`, `image`, `video`, or `audio`. Default to `file`.
+* `**isReusable**` (optional `*Boolean*`): Set to `true` to make the attachment reusable (no need to re-upload it again). Default to `false`.
+
+#### Examples
+
+Provide file attachment as a remote URL (must be started with `http://` or `https://`):
+
+```js
+const response = await fbmSend.attachment("https://example.com/photo.jpg", {
+  to: "1234567",
+  type = "image"
+});
+```
+
+Provide file attachment as a local file:
+
+```js
+const response = await fbmSend.attachment(`${__dirname}/test.txt`, {
+  to: "1234567",
+  type: "file"
+});
+```
+
+Set `isReusable` to `true` to save the attachment, so it can later be reused without the needs to upload it again.
+
+```js
+// The attachment_id can later be used
+const { attachment_id } = await fbmSend.attachment(`${__dirname}/test.txt`, {
+  to: "1234567",
+  type: "file",
+  isReusable: true
+});
+```
+
+Instead of re-uploading the file, the `attachment_id` can later be referenced.
+
+### Send Image/Video/Audio
+
+There are also wrapper methods to send an attachment with image, video, or audio type:
+
+```js
+// Send image.
+const response = await fbmSend.image(file, {
+  to,
+  messagingType = "RESPONSE",
+  isReusable = false
+});
+
+// Send video.
+const response = await fbmSend.video(file, {
+  to,
+  messagingType = "RESPONSE",
+  isReusable = false
+});
+
+// Send audio.
+const response = await fbmSend.audio(file, {
+  to,
+  messagingType = "RESPONSE",
+  isReusable = false
+});
+```
+
+#### Parameters
+
+* `**file**` (`*String*`): The remote URL of the file or the local file path.
+* `**to**` (`*String*`|`*Object*`): The [recipient](#recipient).
+* `**messagingType**` (optional `*String*`): The [messaging type](#messaging-type), default to `RESPONSE`.
+* `**isReusable**` (optional `*Boolean*`): Set to `true` to make the attachment reusable (no need to re-upload it again). Default to `false`.
+
+#### Examples
+
+```js
+const response = await fbmSend.image("https://example.com/photo.jpg", {
+  to: "1234567"
+});
+
+const response = await fbmSend.video(`../videos/cat.mp4`, {
+  to: "1234567",
+  isReusable: true
+});
+
+const response = await fbmSend.audio("https://example.com/sound.mp3", {
+  to: "1234567",
+  messagingType: "UPDATE"
+});
+```
 
 ## Related
 
