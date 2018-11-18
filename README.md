@@ -1,446 +1,515 @@
-# Messenger Client
+# Facebook Messenger Send API Client
 
-[![Latest Stable Version](https://img.shields.io/npm/v/messenger-client.svg)](https://www.npmjs.com/package/messenger-client)
-[![Node Version](https://img.shields.io/node/v/messenger-client.svg)](https://www.npmjs.com/package/messenger-client)
-[![Build Status](https://travis-ci.org/risan/messenger-client.svg?branch=master)](https://travis-ci.org/risan/messenger-client)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/8e8e182d7cd4c25f471a/test_coverage)](https://codeclimate.com/github/risan/messenger-client/test_coverage)
-[![Maintainability](https://api.codeclimate.com/v1/badges/8e8e182d7cd4c25f471a/maintainability)](https://codeclimate.com/github/risan/messenger-client/maintainability)
-[![Code Style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/risan/messenger-client)
-[![License](https://img.shields.io/npm/l/messenger-client.svg)](https://www.npmjs.com/package/messenger-client)
+[![Build Status](https://flat.badgen.net/travis/risan/fbm-send)](https://travis-ci.org/risan/fbm-send)
+[![Test Coverage](https://flat.badgen.net/codeclimate/coverage/risan/fbm-send)](https://codeclimate.com/github/risan/fbm-send)
+[![Maintainability](https://flat.badgen.net/codeclimate/maintainability/risan/fbm-send)](https://codeclimate.com/github/risan/fbm-send)
+[![Latest Stable Version](https://flat.badgen.net/npm/v/fbm-send)](https://www.npmjs.com/package/fbm-send)
+[![Node Version](https://flat.badgen.net/npm/node/fbm-send)](https://www.npmjs.com/package/fbm-send)
+[![Code Style: Prettier](https://flat.badgen.net/badge/code%20style/prettier/ff69b4)](https://github.com/prettier/prettier)
+[![License](https://flat.badgen.net/npm/license/fbm-send)](https://github.com/risan/fbm-send/blob/master/LICENSE)
 
-Javascript library for sending a message through Facebook Messenger Send API.
+JavaScript library for interacting with Facebook Messenger send API.
 
-## Table of Contents
-
-* [Install](#install)
-* [Basic Usage](#basic-usage)
-* [API](#api)
-    * [Constructor](#constructor)
-    * [Messaging Type](#messaging-type)
-    * [Interacts with Facebook Messenger Send API](#interacts-with-facebook-messenger-send-api)
-    * [Send Text](#send-text)
-    * [Send Attachments](#send-attachments)
-    * [Send Actions](#send-actions)
-    * [Send Quick Replies](#send-quick-replies)
-    * [Send Buttons](#send-buttons)
-    * [Send Generic](#send-generic)
-    * [Send List](#send-list)
-    * [Send Media](#send-media)
-    * [Send Open Graph](#send-open-graph)
-    * [Send Receipt](#send-receipt)
-
-## Install
-
-This package depends on [axios](https://github.com/axios/axios) library, so you need to install it too.
+## Installation
 
 ```bash
-$ npm install axios messenger-client
+$ npm install fbm-send
+
+# Or if you use Yarn
+$ yarn add fbm-send
 ```
 
-## Basic Usage
+## Quick Start
 
-Here's a basic usage on sending a text reply to the user identifed by and id of `123`.
+Use the [`fbm-webhook`](https://github.com/risan/fbm-webhook) module for handling the Facebook Messenger [webhook events](https://developers.facebook.com/docs/messenger-platform/reference/webhook-events/).
 
 ```js
-const MessengerClient = require('messenger-client');
+const FbmSend = require("fbm-send");
+const fbmWebhook = require("fbm-webhook");
 
-const client = new MessengerClient({ pageAccessToken: 'YOUR_PAGE_ACCESS_TOKEN' });
+const webhook = fbmWebhook({
+  path: "/webhook",
+  appSecret: "Your Facebook App Secret",
+  verifyToken: "Your Predefined Verify Token"
+});
 
-client.sendText({ recipientId: 123, text: 'Hello World 🌎' })
-  .then(data => console.log(data))
-  .catch(e => console.error(e.message));
+const fbmSend = new FbmSend({
+  accessToken: "Your Page Access Token",
+  version: "3.2"
+});
+
+// Listen to the message event.
+webhook.on("message", async event => {
+  // Reply with text.
+  const response = await fbmSend.request({
+    recipient: event.sender,
+    messaging_type: "RESPONSE",
+    message: {
+      text: "Hello World!"
+    }
+  });
+
+  console.log(response);
+});
+
+webhook.listen(3000, () => console.log("Server is running on port: 3000"));
 ```
 
-## API
+* `accessToken`: Your Facebook page access token, default to `process.env.FB_PAGE_ACCESS_TOKEN`.
+* `version`: The Facebook Graph API version, default to `3.2`.
+
+You can use the `try...catch` block to catch the API error response:
+
+```js
+try {
+  await fbmSend.request({
+    recipient: event.sender,
+    messaging_type: "RESPONSE",
+    message: {
+      text: "Hello World!"
+    }
+  });
+} catch(error) {
+  if (error.hasOwnProperty("response")) {
+    console.log(error.response); // The API error response object.
+  }
+}
+```
+
+## API and Features
+
+### Table of Contents
+
+* [Constructor](#constructor)
+* [Send Request](#send-request)
+* [Send Text](#send-text)
+* [Send Attachment](#send-attachment)
+* [Send Image/Video/Audio](#send-imagevideoaudio)
+* [Send Saved Attachment](#send-saved-attachment)
+* [Send Sender Action](#send-sender-action)
+* [Send Mark Seen/Typing On/Typing Off](#send-mark-seentyping-ontyping-off)
 
 ### Constructor
 
+Create a new `fbm-send` instance.
+
 ```js
-const client = new MessengerClient({ pageAccessToken, [apiVersion] });
+new FbmSend([{
+  accessToken = process.env.FB_PAGE_ACCESS_TOKEN,
+  version = "3.2"
+}]);
 ```
 
-#### Parameters:
-- **`pageAccessToken`** (*`String`*): The access token for the page where the Messenger bot will be used. To get your page access token, heads up to [Facebook apps](https://developers.facebook.com/apps) page and select the app that you use for your Messenger bot. Within your app page, select the **Messenger** >> **Settings** menu on the left. On this Messenger settings console, you'll find **Token Generation** section to generate the access token.
-- **`apiVersion`** (*`String`*): The Facebook Messenger API version to use. Optional parameter, default to `2.11`.
+#### Parameters
 
-### Messaging Type
+* **`accessToken`** (optional *`String`*): The Facebook page access token, default to `process.env.FB_PAGE_ACCESS_TOKEN`.
+* **`version`** (optional *`String`*): The Facebook Graph API version, default to `3.2`.
 
-As of the release of Messenger Platform v2.2, the Send API requires you to provide the `messaging_type` property. You can check all possible values for `messaging_type` in the [documentation](https://developers.facebook.com/docs/messenger-platform/send-messages#messaging_types). You can pass the `messagingType` property to all send methods and if you not set it, it will be default to `RESPONSE`.
+### Send Request
 
-This package also provides static properties that you can use to represent the messaging type value:
+Use the `request` method to send an HTTP request to the Send API. All other methods are just a wrapper around this method.
 
 ```js
-MessengerClient.MESSAGING_TYPE_RESPONSE; // RESPONSE
-MessengerClient.MESSAGING_TYPE_UPDATE; // UPDATE
-MessengerClient.MESSAGING_TYPE_MESSAGE_TAG; // MESSAGE_TAG
-MessengerClient.MESSAGING_TYPE_NON_PROMOTIONAL_SUBSCRIPTION; // NON_PROMOTIONAL_SUBSCRIPTION
+const response = await request({
+  recipient,
+  formData = false,
+  ...body
+});
 ```
 
-### Interacts with Facebook Messenger Send API
+#### Parameters
 
-This is the most basic API to allow you interact directly with Facebook Messenger send API.
+* **`recipient`** (*`String`*|*`Object`*): The message [recipient](#recipient).
+* **`formData`** (optional *`Boolean`*): Send the request as a `multipart/form-data` (for uploading a local file), default to `false`.
+* **`body`** (`Object`): The request payload to send.
+
+#### Recipient
+
+The recipient can be a `String`: `PSID`, `phone_number`, or a `user_ref`.
+
+It can also be an `Object` as defined in the documentation: [recipient object](https://developers.facebook.com/docs/messenger-platform/reference/send-api#recipient).
 
 ```js
-client.send(data);
+// Recipient as a string.
+const recipient = "1234567"; // PSID, phone_number, or user_ref
+
+// Equals to recipient as an object.
+const recipient = {
+  id: "1234567"
+}
 ```
 
-#### Parameters:
-- **`data`** (*`Object`*): An object of payload that you need to provide to Facebook Messenger Send API.
+#### Messaging Type
 
-Check out the Send API [documentation](https://developers.facebook.com/docs/messenger-platform/reference/send-api/#payload) to see all possible payload properties.
+As of Graph API version `2.2`, you're required to pass the `messaging_type` (`String`). There are three supported values for `messaging_type`:
 
-#### Example
-Sending a text message using a basic `send` method:
+* `RESPONSE` (default value)
+* `UPDATE`
+* `MESSAGE_TAG`
+
+Read more in the [messaging type documentation](https://developers.facebook.com/docs/messenger-platform/send-messages#messaging_types).
+
+#### Return
+
+It returns a `Promise` which when resolved contains a response from the API.
+
+#### Examples
+
+Send a simple text to the user:
 
 ```js
-client.send({
-  messaging_type: Messenger.MESSAGING_TYPE_RESPONSE,
-  recipient: {
-    id: 123
-  },
+const response = await fbmSend.request({
+  recipient: "123456",
+  messaging_type = "RESPONSE",
   message: {
-    text: 'May the force be with you ✨'
+    text: "Hello World!"
+  }
+});
+
+// Equals to:
+const response = await fbmSend.request({
+  recipient: {
+    id: "123456"
+  },
+  messaging_type = "RESPONSE",
+  message: {
+    text: "Hello World!"
+  }
+});
+```
+
+Send a file from a local filesystem:
+
+```js
+const fs = require("fs");
+
+const myFile = fs.createReadStream(`${__dirname}/test.txt`);
+
+const response = await fbmSend.request({
+  recipient: "123456",
+  messaging_type = "RESPONSE",
+  message: {
+    attachment: {
+      type: "file",
+      payload: {
+        is_reusable: true
+      }
+    }
+  },
+  filedata: myFile,
+  formData: true // Must be set to TRUE!
+});
+```
+
+Check the [Send Attachment](#send-attachment) feature for more simpler approach.
+
+Send quick replies:
+
+```js
+const response = await fbmSend.request({
+  recipient: "123456",
+  messaging_type: "RESPONSE",
+  message: {
+    text: "Choose your Jedi",
+    quick_replies: [
+      {
+        content_type: "text",
+        title: "Yoda",
+        payload: "yoda"
+      },
+      {
+        content_type: "text",
+        title: "Luke Skywalker",
+        payload: "luke_skywalker"
+      }
+    ]
+  }
+});
+```
+
+Send URL buttons:
+
+```js
+const response = await fbmSend.request({
+  recipient: "123456",
+  messaging_type: "RESPONSE",
+  message: {
+    attachment: {
+      type: "template",
+      payload: {
+        template_type: "button",
+        text: "Jedi Wiki",
+        buttons: [
+          {
+            type: "web_url",
+            url: "https://en.wikipedia.org/wiki/Yoda",
+            title: "Yoda"
+          },
+          {
+            type: "web_url",
+            url: "https://en.wikipedia.org/wiki/Luke_Skywalker",
+            title: "Luke Skywalker"
+          }
+        ]
+      }
+    }
   }
 });
 ```
 
 ### Send Text
 
-```js
-client.sendText({ recipientId, text, [messagingType] });
-```
-
-#### Parameters:
-- **`recipientId`** (*`Integer`*): The recipient ID.
-- **`text`** (*`String`*): The text that you want to send to the user.
-- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
-
-#### Example
+Send a plain text to the user:
 
 ```js
-client.sendText({
-  recipientId: 123,
-  text: 'Do or do not. There is no try.'
+const response = await fbmSend.text(text, {
+  to,
+  messagingType: "RESPONSE"
 });
 ```
 
-### Send Attachments
+#### Parameters
+
+* **`text`** (*`String`*): The text to send.
+* **`to`** (*`String`*|*`Object`*): The [recipient](#recipient).
+* **`messagingType`** (optional *`String`*): The [messaging type](#messaging-type), default to `RESPONSE`.
+
+#### Examples
 
 ```js
-client.sendImage({ recipientId, url, [messagingType] });
-client.sendAudio({ recipientId, url, [messagingType] });
-client.sendVideo({ recipientId, url, [messagingType] });
-client.sendFile({ recipientId, url, [messagingType] });
-```
-
-#### Parameters:
-- **`recipientId`** (*`Integer`*): The recipient ID.
-- **`url`** (*`String`*): The URL of the file that you want to send.
-- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
-
-#### Example
-
-```js
-client.sendImage({
-  recipientId: 123,
-  url: 'https://media.giphy.com/media/ArrVyXcjSzzxe/giphy-downsized.gif'
+const response = await fbmSend.text("Hello World!", {
+  to: "123456"
 });
 ```
 
-### Send Actions
+Overriding the default messaging type:
 
 ```js
-client.sendReadReceipt({ recipientId, [messagingType] });
-client.sendTypingOn({ recipientId, [messagingType] });
-client.sendTypingOff({ recipientId, [messagingType] });
-```
+const { UPDATE } from "fbm-send/messaging-types";
 
-#### Parameters:
-- **`recipientId`** (*`Integer`*): The recipient ID.
-- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
-
-#### Example
-
-```js
-client.sendTypingOn({ recipientId: 123 })
-  .then(data => {
-    setTimeout(() => {
-      client.sendTypingOff({ recipientId: 123 })
-    }, 5000);
-  });
-```
-
-### Send Quick Replies
-
-```js
-client.sendQuickReplies({ recipientId, text, replies, [messagingType] });
-```
-
-#### Parameters:
-- **`recipientId`** (*`Integer`*): The recipient ID.
-- **`text`** (*`String`*): The main text to send along with the quick replies.
-- **`replies`** (*`Array`*): An array of quick reply options.
-- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
-
-Check the quick replies [documentation](https://developers.facebook.com/docs/messenger-platform/reference/send-api/quick-replies#quick_reply) to see all possible properties for `replies` parameter.
-
-#### Example
-
-```js
-client.sendQuickReplies({
-  recipientId: 123,
-  text: 'Choose your favorite spacecraft:',
-  replies: [
-    {
-      content_type: 'text',
-      title: 'Millennium Falcon',
-      payload: 'MILLENNIUM_FALCON_IS_SELECTED'
-    },
-    {
-      content_type: 'text',
-      title: 'Star Destroyer',
-      payload: 'STAR_DESTROYER_IS_SELECTED'
-    }
-  ]
+const response = await fbmSend.text("Hello World!", {
+  to: "123456",
+  messagingType: UPDATE
 });
 ```
 
-### Send Buttons
+### Send Attachment
+
+Send an attachment to the user:
 
 ```js
-client.sendButtons({ recipientId, text, buttons, [messagingType] });
-```
-
-#### Parameters:
-- **`recipientId`** (*`Integer`*): The recipient ID.
-- **`text`** (*`String`*): The main text to send along with the buttons.
-- **`buttons`** (*`Array`*): An array that consist of 1-3 button objects.
-- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
-
-Check the buttons [documentaion](https://developers.facebook.com/docs/messenger-platform/send-messages/buttons) to see all possible button types and how to construct them.
-
-#### Example
-
-```js
-client.sendButtons({
-  recipientId: 123,
-  text: 'Check out for more detail',
-  buttons: [
-    {
-      type: 'web_url',
-      url: 'http://www.starwars.com',
-      title: 'Star Wars Homepage'
-    },
-    {
-      type: 'web_url',
-      url: 'https://en.wikipedia.org/wiki/Star_Wars',
-      title: 'Star Wars Wikipedia'
-    }
-  ]
+const response = await fbmSend.attachment(file, {
+  to,
+  messagingType = "RESPONSE",
+  type = "file",
+  isReusable = false
 });
 ```
 
-### Send Generic
+#### Parameters
+
+* **`file`** (*`String`*): The remote URL of the file or the local file path.
+* **`to`** (*`String`*|*`Object`*): The [recipient](#recipient).
+* **`messagingType`** (optional *`String`*): The [messaging type](#messaging-type), default to `RESPONSE`.
+* **`type`** (optional *`String`*): The type of the attachment: `file`, `image`, `video`, or `audio`. Default to `file`.
+* **`isReusable`** (optional *`Boolean`*): Set to `true` to make the attachment reusable (no need to re-upload it again). Default to `false`.
+
+#### Examples
+
+Provide file attachment as a remote URL (must be started with `http://` or `https://`):
 
 ```js
-client.sendGeneric({ recipientId, elements, [messagingType] });
-```
-
-#### Parameters:
-- **`recipientId`** (*`Integer`*): The recipient ID.
-- **`elements`** (*`Array`*): An array of structured template elements that you want to send, maximum up to 10 items.
-- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
-
-Check the generic template [documentaion](https://developers.facebook.com/docs/messenger-platform/reference/template/generic#elements) to see all possible element properties that you can provide.
-
-#### Example
-
-```js
-client.sendGeneric({
-  recipientId: 123,
-  elements: [{
-    title: 'Do or do not. There is no try.',
-    image_url: 'https://media.giphy.com/media/ArrVyXcjSzzxe/giphy-downsized.gif',
-    buttons: [
-      {
-        type: 'postback',
-        title: 'Do',
-        payload: 'DO_IS_CLICKED',
-      },
-      {
-        type: 'postback',
-        title: 'Try',
-        payload: 'TRY_IS_CLICKED',
-      }
-    ]
-  }]
+const response = await fbmSend.attachment("https://example.com/photo.jpg", {
+  to: "1234567",
+  type = "image"
 });
 ```
 
-### Send List
+Provide file attachment as a local file:
 
 ```js
-client.sendList({ recipientId, elements, [topElementStyle, button, messagingType] });
-```
-
-#### Parameters:
-- **`recipientId`** (*`Integer`*): The recipient ID.
-- **`elements`** (*`Array`*): Array of objects that describe items in the list. Minimum of 2 elements must be provided, and up to 4 elements is supported.
-- **`topElementStyle`** (*`String`*): Optional parameter to set the format of the first item, it can be: `compact` or `large`.
-- **`button`** (*`Object`*): Optional [button](https://developers.facebook.com/docs/messenger-platform/send-api-reference/buttons) object to display at the bottom of the list.
-- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
-
-Check the list template [documentaion](https://developers.facebook.com/docs/messenger-platform/reference/template/list#elements) to see all possible element properties that you can provide.
-
-#### Example
-
-```js
-client.sendList({
-  recipientId: 123,
-  topElementStyle: 'compact',
-  elements: [
-    {
-      title: 'Millennium Falcon',
-      subtitle: 'The modified YT-1300F Corellian Light Freighter',
-      image_url: 'https://media.giphy.com/media/4MFxMNhSioR3i/giphy-tumblr.gif',
-      default_action: {
-        type: 'web_url',
-        url: 'https://en.wikipedia.org/wiki/Millennium_Falcon'
-      }
-    },
-    {
-      title: 'Star Destroyer',
-      subtitle: 'The vessel of the Imperial fleet',
-      image_url: 'https://media.giphy.com/media/unK3ncdrEao2k/giphy-downsized.gif',
-      default_action: {
-        type: 'web_url',
-        url: 'https://en.wikipedia.org/wiki/Star_Destroyer'
-      }
-    }
-  ]
+const response = await fbmSend.attachment(`${__dirname}/test.txt`, {
+  to: "1234567",
+  type: "file"
 });
 ```
 
-### Send Media
+Set `isReusable` to `true` to save the attachment, so it can later be reused without the needs to upload it again.
 
 ```js
-client.sendMedia({ recipientId, type, url, attachmentId, button, [messagingType] });
-```
-
-#### Parameters:
-- **`recipientId`** (*`Integer`*): The recipient ID.
-- **`type`** (*`String`*): The type of the media, it can be `image` or `video`.
-- **`url`** (*`String`*): The Facebook URL of the media, leave it empty if you want to set the `attachmentId` instead. Note that it must be a Facebook URL, check the [documentation](https://developers.facebook.com/docs/messenger-platform/send-messages/template/media#facebook_url) for more info.
-- **`attachmentId`** (*`String`*): The attachment ID, it will be ignored if you set the `url` parameter.
-- **`button`** (*`Object`*): An object of [button](https://developers.facebook.com/docs/messenger-platform/send-api-reference/buttons).
-- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
-
-Check the media template [documentaion](https://developers.facebook.com/docs/messenger-platform/reference/template/media#elements) for more information.
-
-#### Example
-
-```js
-client.sendMedia({
-  recipientId: 123,
-  type: 'video',
-  url: 'https://business.facebook.com/StarWars.Nordics/videos/1921975247818517',
-  button: {
-    type: 'web_url',
-    url: 'https://en.wikipedia.org/wiki/Star_Wars:_The_Last_Jedi',
-    title: 'Read More'
-  }
+// The attachment_id can later be used
+const { attachment_id } = await fbmSend.attachment(`${__dirname}/test.txt`, {
+  to: "1234567",
+  type: "file",
+  isReusable: true
 });
 ```
 
-### Send Open Graph
+Instead of re-uploading the file, the `attachment_id` can later be referenced.
+
+### Send Image/Video/Audio
+
+There are also wrapper methods to send an attachment with image, video, or audio type:
 
 ```js
-client.sendOpenGraph({ recipientId, url, buttons, [messagingType] });
-```
+// Send image.
+const response = await fbmSend.image(file, {
+  to,
+  messagingType = "RESPONSE",
+  isReusable = false
+});
 
-#### Parameters:
-- **`recipientId`** (*`Integer`*): The recipient ID.
-- **`url`** (*`String`*): The Open Graph URL that you want to send. Currently, only sharing songs is supported.
-- **`buttons`** (*`Array`*): An array of [button](https://developers.facebook.com/docs/messenger-platform/send-api-reference/buttons) objects to append to.
-- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
+// Send video.
+const response = await fbmSend.video(file, {
+  to,
+  messagingType = "RESPONSE",
+  isReusable = false
+});
 
-Check the Open Graph template [documentaion](https://developers.facebook.com/docs/messenger-platform/reference/template/open-graph#elements) for more information.
-
-#### Example
-
-```js
-client.sendOpenGraph({
-  recipientId: 123,
-  url: 'https://open.spotify.com/track/7a3iXf8eqbwciDHZUbfQSQ',
-  buttons: [
-    {
-      type: 'web_url',
-      url: 'https://en.wikipedia.org/wiki/The_Imperial_March',
-      title: 'Read More'
-    }
-  ]
+// Send audio.
+const response = await fbmSend.audio(file, {
+  to,
+  messagingType = "RESPONSE",
+  isReusable = false
 });
 ```
 
-### Send Receipt
+#### Parameters
+
+* **`file`** (*`String`*): The remote URL of the file or the local file path.
+* **`to`** (*`String`*|*`Object`*): The [recipient](#recipient).
+* **`messagingType`** (optional *`String`*): The [messaging type](#messaging-type), default to `RESPONSE`.
+* **`isReusable`** (optional *`Boolean`*): Set to `true` to make the attachment reusable (no need to re-upload it again). Default to `false`.
+
+#### Examples
 
 ```js
-client.sendReceipt({
-  recipientId, recipientName, orderNumber, paymentMethod, summary,
-  [currency, sharable, merchantName, timestamp, elements, address, adjustments, messagingType]
+const response = await fbmSend.image("https://example.com/photo.jpg", {
+  to: "1234567"
+});
+
+const response = await fbmSend.video(`../videos/cat.mp4`, {
+  to: "1234567",
+  isReusable: true
+});
+
+const response = await fbmSend.audio("https://example.com/sound.mp3", {
+  to: "1234567",
+  messagingType: "UPDATE"
 });
 ```
 
-#### Required Parameters:
-- **`recipientId`** (*`Integer`*): The recipient ID.
-- **`recipientName`** (*`String`*): The recipient's name.
-- **`orderNumber`** (*`String`*): The order number, it must be unique.
-- **`paymentMethod`** (*String*): The payment method used. It's recomended to provide enough information for the customer on which payment method and account they used. It can be a custom string like `Visa 1234`.
-- **`summary`** (*Object*): The payment summary object, the only required property is the `total_cost`. Check the [summary section](https://developers.facebook.com/docs/messenger-platform/reference/template/receipt#summary) for further information.
+### Send Saved Attachment
 
-#### Optional Parameters:
-- **`currency`** (*`String`*): The currency of the payment, default to `USD`.
-- **`sharable`** (*`Boolean`*): Enable or disable native share button, default to `false`.
-- **`merchantName`** (*`String`*): The merchant's name.
-- **`timestamp`** (*`String`*): Timestamp of the order in seconds.
-- **`elements`** (*`Array`*): Array of object that describe items within the order. Check the [element section](https://developers.facebook.com/docs/messenger-platform/reference/template/receipt#elements) for more information.
-- **`address`** (*`Object`*): The shipping address of the order. Check the [address section](https://developers.facebook.com/docs/messenger-platform/reference/template/receipt#address) for more information.
-- **`adjustments`** (*`Array`*): An array of object that describe the payment adjustments, such as discount. Check the [adjustments section](https://developers.facebook.com/docs/messenger-platform/reference/template/receipt#adjustments) for more information.
-- **`messagingType`** (*`String`)*: The [messaging type](#messaging-type). Optional parameter, default to `RESPONSE`.
-
-Check the receipt template [documentaion](https://developers.facebook.com/docs/messenger-platform/reference/template/receipt) for more information.
-
-#### Example
+When sending an attachment, set the `isReusable` to `true` to save the file for later use. You'll get the `attachment_id` from the API response. You can use this `attachment_id` to send the same file without the needs to re-upload it again.
 
 ```js
-client.sendReceipt({
-  recipientId: 123,
-  recipientName: 'Darth Vader',
-  orderNumber: '123456',
-  paymentMethod: 'Visa 1234',
-  summary: {
-    total_cost: 12500
-  },
-  elements: [
-    {
-      title: 'Death Star',
-      image_url: 'https://upload.wikimedia.org/wikipedia/en/f/f9/Death_star1.png',
-      quantity: 1,
-      price: 10000
-    },
-    {
-      title: 'TIE Fighter',
-      image_url: 'https://free3d.com/imgd/l15332-tie-fighter-94029.jpg',
-      quantity: 5,
-      price: 500
-    }
-  ]
+const response = await fbmSend.attachmentId(id, {
+  to,
+  messagingType = "RESPONSE",
+  type = "file"
 });
 ```
+
+#### Parameters
+
+* **`id`** (*`String`*): The attachment id.
+* **`to`** (*`String`*|*`Object`*): The [recipient](#recipient).
+* **`messagingType`** (optional *`String`*): The [messaging type](#messaging-type), default to `RESPONSE`.
+* **`type`** (optional *`String`*): The type of the attachment: `file`, `image`, `video`, or `audio`. Default to `file`.
+
+#### Examples
+
+```js
+// Send an attachment and get the id for later use.
+const { attachment_id } = await fbmSend.attachment(`${__dirname}/test.txt`, {
+  to: "123456",
+  type: "file",
+  isReusable: true // Set to TRUE
+});
+
+// Use the saved attachment file.
+const response = await fbmSend.attachmentId("98765432", {
+  to: "567890",
+  type: "file"
+});
+```
+
+### Send Sender Action
+
+Send sender action to the user:
+
+```js
+const response = await fbmSend.action(type, {
+  to
+});
+```
+
+#### Parameters
+
+* **`type`** (*`String`*): The action type: `mark_seen`, `typing_on`, or `typing_off`.
+* **`to`** (*`String`*|*`Object`*): The [recipient](#recipient).
+
+#### Examples
+
+```js
+const { MARK_SEEN, TYPING_ON, TYPING_OFF } = require("fbm-send/sender-actions");
+
+const response = await fbmSend.action(MARK_SEEN, {
+  to: "1234"
+});
+
+const response = await fbmSend.action(TYPING_ON, {
+  to: "1234"
+});
+
+const response = await fbmSend.action(TYPING_OFF, {
+  to: "1234"
+});
+```
+
+### Send Mark Seen/Typing On/Typing Off
+
+There are also wrapper methods to send mark seen/typing on/typing off action to the user:
+
+```js
+const response = await fbmSend.markSeen({ to });
+
+const response = await fbmSend.markTypingOn({ to });
+
+const response = await fbmSend.markTypingOff({ to });
+```
+
+#### Parameters
+
+* **`to`** (*`String`*|*`Object`*): The [recipient](#recipient).
+
+#### Examples
+
+```js
+// Send mark as seen action.
+const response = await fbmSend.markSeen({
+  to: "1234"
+});
+
+// Send typing on action.
+const response = await fbmSend.typingOn({
+  to: "1234"
+});
+
+// Send typing off action.
+await fbmSend.typingOff({
+  to: "1234"
+});
+```
+
+## Related
+
+* [fbm-webhook](https://github.com/risan/fbm-webhook): Facebook Messenger webhook middleware for Express.
 
 ## License
 
-MIT © [Risan Bagja Pradana](https://risan.io)
+MIT © [Risan Bagja Pradana](https://bagja.net)
 
 ## Legal
 

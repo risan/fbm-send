@@ -1,61 +1,50 @@
 {
-  "name": "messenger-client",
-  "description": "A library for sending a message through Facebook Messenger send API",
-  "version": "1.0.1",
+  "name": "fbm-send",
+  "description": "Facebook Messenger send API client",
+  "version": "2.0.0",
   "license": "MIT",
-  "homepage": "https://github.com/risan/messenger-client#readme",
+  "homepage": "https://github.com/risan/fbm-send#readme",
   "author": {
     "name": "Risan Bagja Pradana",
     "email": "risanbagja@gmail.com",
-    "url": "https://risan.io"
+    "url": "https://bagja.net"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/risan/messenger-client.git"
+    "url": "git+https://github.com/risan/fbm-send.git"
   },
   "bugs": {
-    "url": "https://github.com/risan/messenger-client/issues"
+    "url": "https://github.com/risan/fbm-send/issues"
   },
   "keywords": [
-    "messenger",
     "facebook",
+    "messenger",
+    "send-api",
     "chat",
     "bot"
   ],
-  "main": "dist/messenger-client.cjs.js",
-  "module": "dist/messenger-client.esm.js",
+  "main": "src/index",
   "engines": {
-    "node": ">= 6"
+    "node": ">=8.0.0"
   },
   "scripts": {
-    "build": "NODE_ENV=build rollup -c",
-    "dev": "NODE_ENV=build rollup -c -w",
-    "lint": "eslint src",
-    "lint-fix": "eslint src --fix",
-    "prepublishOnly": "npm run test && npm run build",
-    "prettier": "prettier --write '{src,tests}/**/*.js'",
-    "test": "NODE_ENV=jest jest"
+    "lint": "eslint ./",
+    "lint-fix": "eslint ./ --fix",
+    "prepublishOnly": "npm run lint && npm run test",
+    "test": "jest"
+  },
+  "dependencies": {
+    "form-data": "^2.0.0",
+    "got": "^9.0.0",
+    "lodash": "^4.0.0"
   },
   "devDependencies": {
-    "axios": ">= 0.16.0",
-    "babel-core": "^6.26.0",
-    "babel-jest": "^21.2.0",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "eslint": "^4.13.1",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-prettier": "^2.3.1",
-    "jest": "^21.2.1",
-    "nock": "^9.1.4",
-    "prettier": "^1.9.2",
-    "rollup": "^0.52.2",
-    "rollup-plugin-babel": "^3.0.2",
-    "rollup-plugin-eslint": "^4.0.0"
-  },
-  "peerDependencies": {
-    "axios": ">= 0.16.0"
+    "eslint": "^5.9.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "jest": "^23.6.0",
+    "prettier": "^1.15.2"
   }
 }
