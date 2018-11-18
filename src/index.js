@@ -182,11 +182,7 @@ class FbmSend {
    * @param {Object} options.body
    * @return {Object}
    */
-  async request({
-    recipient,
-    formData = false,
-    ...body
-  }) {
+  async request({ recipient, formData = false, ...body }) {
     let recipientObj = recipient;
 
     if (typeof recipient !== "object") {
