@@ -86,6 +86,8 @@ try {
 * [Send Attachment](#send-attachment)
 * [Send Image/Video/Audio](#send-imagevideoaudio)
 * [Send Saved Attachment](#send-saved-attachment)
+* [Send Sender Action](#send-sender-action)
+* [Send Mark Seen/Typing On/Typing Off](#send-mark-seentyping-ontyping-off)
 
 ### Constructor
 
