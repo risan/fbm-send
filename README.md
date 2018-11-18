@@ -203,6 +203,60 @@ const response = await fbmSend.request({
 
 Check the [Send Attachment](#send-attachment) feature for more simpler approach.
 
+Send quick replies:
+
+```js
+const response = await fbmSend.request({
+  recipient: "123456",
+  messaging_type: "RESPONSE",
+  message: {
+    text: "Choose your Jedi",
+    quick_replies: [
+      {
+        content_type: "text",
+        title: "Yoda",
+        payload: "yoda"
+      },
+      {
+        content_type: "text",
+        title: "Luke Skywalker",
+        payload: "luke_skywalker"
+      }
+    ]
+  }
+});
+```
+
+Send URL buttons:
+
+```js
+const response = await fbmSend.request({
+  recipient: "123456",
+  messaging_type: "RESPONSE",
+  message: {
+    attachment: {
+      type: "template",
+      payload: {
+        template_type: "button",
+        text: "Jedi Wiki",
+        buttons: [
+          {
+            type: "web_url",
+            url: "https://en.wikipedia.org/wiki/Yoda",
+            title: "Yoda"
+          },
+          {
+            type: "web_url",
+            url: "https://en.wikipedia.org/wiki/Luke_Skywalker",
+            title: "Luke Skywalker"
+          }
+        ]
+      }
+    }
+  }
+});
+```
+
 ### Send Text
 
 Send a plain text to the user:
