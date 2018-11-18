@@ -74,7 +74,16 @@ try {
 }
 ```
 
-## API
+## API and Features
+
+### Table of Contents
+
+* [Constructor](#constructor)
+* [Send Request](#send-request)
+* [Send Text](#send-text)
+* [Send Attachment](#send-attachment)
+* [Send Image/Video/Audio](#send-imagevideoaudio)
+* [Send Saved Attachment](#send-saved-attachment)
 
 ### Constructor
 
@@ -329,6 +338,42 @@ const response = await fbmSend.video(`../videos/cat.mp4`, {
 const response = await fbmSend.audio("https://example.com/sound.mp3", {
   to: "1234567",
   messagingType: "UPDATE"
+});
+```
+
+### Send Saved Attachment
+
+When sending an attachment, set the `isReusable` to `true` to save the file for later use. You'll get the `attachment_id` from the API response. You can use this `attachment_id` to send the same file without the needs to re-upload it again.
+
+```js
+const response = await fbmSend.attachmentId(id, {
+  to,
+  messagingType = "RESPONSE",
+  type = "file"
+});
+```
+
+#### Parameters
+
+* **`id`** (*`String`*): The attachment id.
+* **`to`** (*`String`*|*`Object`*): The [recipient](#recipient).
+* **`messagingType`** (optional *`String`*): The [messaging type](#messaging-type), default to `RESPONSE`.
+* **`type`** (optional *`String`*): The type of the attachment: `file`, `image`, `video`, or `audio`. Default to `file`.
+
+#### Examples
+
+```js
+// Send an attachment and get the id for later use.
+const { attachment_id } = await fbmSend.attachment(`${__dirname}/test.txt`, {
+  to: "123456",
+  type: "file",
+  isReusable: true // Set to TRUE
+});
+
+// Use the saved attachment file.
+const response = await fbmSend.attachmentId("98765432", {
+  to: "567890",
+  type: "file"
 });
 ```
 
