@@ -1,7 +1,9 @@
 const fs = require("fs");
+
 const isUrl = require("./is-url");
 const request = require("./request");
 const { RESPONSE } = require("./messaging-types");
+const { MARK_SEEN, TYPING_ON, TYPING_OFF } = require("./sender-actions");
 
 class FbmSend {
   /**
@@ -129,17 +131,59 @@ class FbmSend {
   }
 
   /**
+   * Send mark seen action.
+   *
+   * @param {String|Object} options.to
+   * @return {Object}
+   */
+  async markSeen({ to }) {
+    return this.action(MARK_SEEN, { to });
+  }
+
+  /**
+   * Send typing on action.
+   *
+   * @param {String|Object} options.to
+   * @return {Object}
+   */
+  async typingOn({ to }) {
+    return this.action(TYPING_ON, { to });
+  }
+
+  /**
+   * Send typing off action.
+   *
+   * @param {String|Object} options.to
+   * @return {Object}
+   */
+  async typingOff({ to }) {
+    return this.action(TYPING_OFF, { to });
+  }
+
+  /**
+   * Send action.
+   *
+   * @param {String} type
+   * @param {String|Object} options.to
+   * @return {Object}
+   */
+  async action(type, { to }) {
+    return this.request({
+      recipient: to,
+      sender_action: type
+    });
+  }
+
+  /**
    * Send HTTP request.
    *
    * @param {String|Object} options.recipient
-   * @param {String} options.messaging_type
    * @param {Boolean} options.formData
    * @param {Object} options.body
    * @return {Object}
    */
   async request({
     recipient,
-    messaging_type = RESPONSE,
     formData = false,
     ...body
   }) {
@@ -153,8 +197,7 @@ class FbmSend {
       accessToken: this.accessToken,
       body: {
         ...body,
-        recipient: recipientObj,
-        messaging_type
+        recipient: recipientObj
       },
       version: this.version,
       formData

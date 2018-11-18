@@ -43,6 +43,7 @@ webhook.on("message", async event => {
   // Reply with text.
   const response = await fbmSend.request({
     recipient: event.sender,
+    messaging_type: "RESPONSE",
     message: {
       text: "Hello World!"
     }
@@ -63,6 +64,7 @@ You can use the `try...catch` block to catch the API error response:
 try {
   await fbmSend.request({
     recipient: event.sender,
+    messaging_type: "RESPONSE",
     message: {
       text: "Hello World!"
     }
@@ -108,7 +110,6 @@ Use the `request` method to send an HTTP request to the Send API. All other meth
 ```js
 const response = await request({
   recipient,
-  messaging_type = "RESPONSE",
   formData = false,
   ...body
 });
@@ -117,7 +118,6 @@ const response = await request({
 #### Parameters
 
 * **`recipient`** (*`String`*|*`Object`*): The message [recipient](#recipient).
-* **`messaging_type`** (optional *`String`*): The [messaging type](#messaging-type), default to `RESPONSE`.
 * **`formData`** (optional *`Boolean`*): Send the request as a `multipart/form-data` (for uploading a local file), default to `false`.
 * **`body`** (`Object`): The request payload to send.
 
@@ -158,6 +158,7 @@ Send a simple text to the user:
 ```js
 const response = await fbmSend.request({
   recipient: "123456",
+  messaging_type = "RESPONSE",
   message: {
     text: "Hello World!"
   }
@@ -184,6 +185,7 @@ const myFile = fs.createReadStream(`${__dirname}/test.txt`);
 
 const response = await fbmSend.request({
   recipient: "123456",
+  messaging_type = "RESPONSE",
   message: {
     attachment: {
       type: "file",
@@ -374,6 +376,74 @@ const { attachment_id } = await fbmSend.attachment(`${__dirname}/test.txt`, {
 const response = await fbmSend.attachmentId("98765432", {
   to: "567890",
   type: "file"
+});
+```
+
+### Send Sender Action
+
+Send sender action to the user:
+
+```js
+const response = await fbmSend.action(type, {
+  to
+});
+```
+
+#### Parameters
+
+* **`type`** (*`String`*): The action type: `mark_seen`, `typing_on`, or `typing_off`.
+* **`to`** (*`String`*|*`Object`*): The [recipient](#recipient).
+
+#### Examples
+
+```js
+const { MARK_SEEN, TYPING_ON, TYPING_OFF } = require("fbm-send/sender-actions");
+
+const response = await fbmSend.action(MARK_SEEN, {
+  to: "1234"
+});
+
+const response = await fbmSend.action(TYPING_ON, {
+  to: "1234"
+});
+
+const response = await fbmSend.action(TYPING_OFF, {
+  to: "1234"
+});
+```
+
+### Send Mark Seen/Typing On/Typing Off
+
+There are also wrapper methods to send mark seen/typing on/typing off action to the user:
+
+```js
+const response = await fbmSend.markSeen({ to });
+
+const response = await fbmSend.markTypingOn({ to });
+
+const response = await fbmSend.markTypingOff({ to });
+```
+
+#### Parameters
+
+* **`to`** (*`String`*|*`Object`*): The [recipient](#recipient).
+
+#### Examples
+
+```js
+// Send mark as seen action.
+const response = await fbmSend.markSeen({
+  to: "1234"
+});
+
+// Send typing on action.
+const response = await fbmSend.typingOn({
+  to: "1234"
+});
+
+// Send typing off action.
+await fbmSend.typingOff({
+  to: "1234"
 });
 ```
 

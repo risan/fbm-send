@@ -3,6 +3,7 @@ const fs = require("fs");
 const FbmSend = require("../src");
 const request = require("../src/request");
 const { RESPONSE, UPDATE } = require("../src/messaging-types");
+const { MARK_SEEN, TYPING_ON, TYPING_OFF } = require("../src/sender-actions");
 
 jest.mock("fs");
 jest.mock("../src/request");
@@ -54,7 +55,8 @@ test("it can be initiated with custom accessToken and version", () => {
 test("it can send request", async () => {
   const response = await fbmSend.request({
     recipient: "123",
-    message: true
+    message: true,
+    messaging_type: RESPONSE
   });
 
   expect(response).toBe("foo");
@@ -87,14 +89,12 @@ test("it won't alter recipient argument with object type", async () => {
   });
 });
 
-test("it can send request with custom messagingType and formData", async () => {
+test("it can send request with formData", async () => {
   await fbmSend.request({
     recipient: "123",
-    messaging_type: UPDATE,
     formData: true
   });
 
-  expect(getRequestArgs().body.messaging_type).toBe(UPDATE);
   expect(getRequestArgs().formData).toBe(true);
 });
 
@@ -216,5 +216,48 @@ test("it can send audio", async () => {
   expect(fbmSend.attachment).toHaveBeenCalledWith("https://example.com", {
     ...requestOptions,
     type: "audio"
+  });
+});
+
+test("it can send action", async () => {
+  fbmSend.request = mockFbmRequest();
+
+  await fbmSend.action("mark_seen", {
+    to: "123"
+  });
+
+  expect(fbmSend.request).toHaveBeenCalledWith({
+    recipient: "123",
+    sender_action: "mark_seen"
+  });
+});
+
+test("it can send mark seen action", async () => {
+  fbmSend.action = jest.fn();
+
+  await fbmSend.markSeen({ to: "123" });
+
+  expect(fbmSend.action).toHaveBeenCalledWith(MARK_SEEN, {
+    to: "123"
+  });
+});
+
+test("it can send typing on action", async () => {
+  fbmSend.action = jest.fn();
+
+  await fbmSend.typingOn({ to: "123" });
+
+  expect(fbmSend.action).toHaveBeenCalledWith(TYPING_ON, {
+    to: "123"
+  });
+});
+
+test("it can send typing off action", async () => {
+  fbmSend.action = jest.fn();
+
+  await fbmSend.typingOff({ to: "123" });
+
+  expect(fbmSend.action).toHaveBeenCalledWith(TYPING_OFF, {
+    to: "123"
   });
 });
