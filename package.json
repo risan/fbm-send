@@ -1,9 +1,9 @@
 {
-  "name": "messenger-client",
+  "name": "fbm-send",
   "description": "Facebook Messenger send API client",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "license": "MIT",
-  "homepage": "https://github.com/risan/messenger-client#readme",
+  "homepage": "https://github.com/risan/fbm-send#readme",
   "author": {
     "name": "Risan Bagja Pradana",
     "email": "risanbagja@gmail.com",
@@ -11,10 +11,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/risan/messenger-client.git"
+    "url": "git+https://github.com/risan/fbm-send.git"
   },
   "bugs": {
-    "url": "https://github.com/risan/messenger-client/issues"
+    "url": "https://github.com/risan/fbm-send/issues"
   },
   "keywords": [
     "facebook",
