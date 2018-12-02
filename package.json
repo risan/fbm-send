@@ -1,21 +1,7 @@
 {
   "name": "fbm-send",
+  "version": "2.0.1",
   "description": "Facebook Messenger send API client",
-  "version": "2.0.0",
-  "license": "MIT",
-  "homepage": "https://github.com/risan/fbm-send#readme",
-  "author": {
-    "name": "Risan Bagja Pradana",
-    "email": "risanbagja@gmail.com",
-    "url": "https://bagja.net"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/risan/fbm-send.git"
-  },
-  "bugs": {
-    "url": "https://github.com/risan/fbm-send/issues"
-  },
   "keywords": [
     "facebook",
     "messenger",
@@ -23,9 +9,20 @@
     "chat",
     "bot"
   ],
+  "homepage": "https://github.com/risan/fbm-send#readme",
+  "bugs": {
+    "url": "https://github.com/risan/fbm-send/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Risan Bagja Pradana",
+    "email": "risanbagja@gmail.com",
+    "url": "https://bagja.net"
+  },
   "main": "src/index",
-  "engines": {
-    "node": ">=8.0.0"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/risan/fbm-send.git"
   },
   "scripts": {
     "lint": "eslint ./",
@@ -46,5 +43,8 @@
     "eslint-plugin-prettier": "^3.0.0",
     "jest": "^23.6.0",
     "prettier": "^1.15.2"
+  },
+  "engines": {
+    "node": ">=8.0.0"
   }
 }

@@ -10,7 +10,7 @@
 
 JavaScript library for interacting with Facebook Messenger send API.
 
-## Installation
+## Install
 
 ```bash
 $ npm install fbm-send
@@ -76,7 +76,7 @@ try {
 }
 ```
 
-## API and Features
+## API and Examples
 
 ### Table of Contents
 
