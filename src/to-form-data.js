@@ -1,6 +1,5 @@
 const FormData = require("form-data");
-const forIn = require("lodash/forIn");
-const isPlainObject = require("lodash/isPlainObject");
+const isPlainObj = require("@risan/is-plain-obj");
 
 /**
  * Convert objet to form data.
@@ -11,8 +10,8 @@ const isPlainObject = require("lodash/isPlainObject");
 const toFormData = obj => {
   const form = new FormData();
 
-  forIn(obj, (value, key) =>
-    form.append(key, isPlainObject(value) ? JSON.stringify(value) : value)
+  Object.keys(obj).forEach(key =>
+    form.append(key, isPlainObj(obj[key]) ? JSON.stringify(obj[key]) : obj[key])
   );
 
   return form;

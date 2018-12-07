@@ -1,25 +1,19 @@
 # Facebook Messenger Send API Client
 
-[![Build Status](https://flat.badgen.net/travis/risan/fbm-send)](https://travis-ci.org/risan/fbm-send)
-[![Test Coverage](https://flat.badgen.net/codeclimate/coverage/risan/fbm-send)](https://codeclimate.com/github/risan/fbm-send)
-[![Maintainability](https://flat.badgen.net/codeclimate/maintainability/risan/fbm-send)](https://codeclimate.com/github/risan/fbm-send)
-[![Latest Stable Version](https://flat.badgen.net/npm/v/fbm-send)](https://www.npmjs.com/package/fbm-send)
-[![Node Version](https://flat.badgen.net/npm/node/fbm-send)](https://www.npmjs.com/package/fbm-send)
-[![Code Style: Prettier](https://flat.badgen.net/badge/code%20style/prettier/ff69b4)](https://github.com/prettier/prettier)
-[![License](https://flat.badgen.net/npm/license/fbm-send)](https://github.com/risan/fbm-send/blob/master/LICENSE)
+[![Build Status](https://badgen.net/travis/risan/fbm-send)](https://travis-ci.org/risan/fbm-send)
+[![Test Covarage](https://badgen.net/codecov/c/github/risan/fbm-send)](https://codecov.io/gh/risan/fbm-send)
+[![Greenkeeper](https://badges.greenkeeper.io/risan/fbm-send.svg)](https://greenkeeper.io)
+[![Latest Version](https://badgen.net/npm/v/fbm-send)](https://www.npmjs.com/package/fbm-send)
 
-JavaScript library for interacting with Facebook Messenger send API.
+Send message through Facebook Messenger Send API.
 
-## Install
+## Installation
 
 ```bash
 $ npm install fbm-send
-
-# Or if you use Yarn
-$ yarn add fbm-send
 ```
 
-## Quick Start
+## Usage
 
 Use the [`fbm-webhook`](https://github.com/risan/fbm-webhook) module for handling the Facebook Messenger [webhook events](https://developers.facebook.com/docs/messenger-platform/reference/webhook-events/).
 
@@ -70,7 +64,7 @@ try {
     }
   });
 } catch(error) {
-  if (error.hasOwnProperty("response")) {
+  if (error.response) {
     console.log(error.response); // The API error response object.
   }
 }
@@ -509,7 +503,7 @@ await fbmSend.typingOff({
 
 ## License
 
-MIT © [Risan Bagja Pradana](https://bagja.net)
+[MIT](https://github.com/risan/fbm-send/blob/master/LICENSE) © [Risan Bagja Pradana](https://bagja.net)
 
 ## Legal
 

@@ -1,4 +1,4 @@
-const got = require("got");
+const sendRequest = require("send-request");
 const toFormData = require("./to-form-data");
 
 /**
@@ -18,10 +18,7 @@ const request = async ({
 }) => {
   const url = `https://graph.facebook.com/v${version}/me/messages`;
 
-  const response = await got.post(url, {
-    query: {
-      access_token: accessToken
-    },
+  const response = await sendRequest(`${url}?access_token=${accessToken}`, {
     json: !formData,
     body: formData ? toFormData(body) : body
   });
