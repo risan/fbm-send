@@ -20,6 +20,7 @@ test("it can send request to Facebook API", async () => {
   expect(sendRequest).toHaveBeenCalledWith(
     "https://graph.facebook.com/v3.2/me/messages?access_token=secret",
     {
+      method: "POST",
       json: true,
       body: "foo"
     }

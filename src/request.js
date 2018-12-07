@@ -19,6 +19,7 @@ const request = async ({
   const url = `https://graph.facebook.com/v${version}/me/messages`;
 
   const response = await sendRequest(`${url}?access_token=${accessToken}`, {
+    method: "POST",
     json: !formData,
     body: formData ? toFormData(body) : body
   });
