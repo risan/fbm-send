@@ -1,6 +1,6 @@
 {
   "name": "fbm-send",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Send message through Facebook Messenger Send API.",
   "keywords": [
     "bot",

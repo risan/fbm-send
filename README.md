@@ -447,7 +447,7 @@ const response = await fbmSend.action(type, {
 #### Examples
 
 ```js
-const { MARK_SEEN, TYPING_ON, TYPING_OFF } = require("fbm-send/sender-actions");
+const { MARK_SEEN, TYPING_ON, TYPING_OFF } = require("fbm-send/src/sender-actions");
 
 const response = await fbmSend.action(MARK_SEEN, {
   to: "1234"
@@ -469,9 +469,9 @@ There are also wrapper methods to send mark seen/typing on/typing off action to 
 ```js
 const response = await fbmSend.markSeen({ to });
 
-const response = await fbmSend.markTypingOn({ to });
+const response = await fbmSend.typingOn({ to });
 
-const response = await fbmSend.markTypingOff({ to });
+const response = await fbmSend.typingOff({ to });
 ```
 
 #### Parameters
