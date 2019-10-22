@@ -11,7 +11,7 @@ jest.mock("../src/request");
 let fbmSend = null;
 
 beforeEach(() => {
-  fbmSend = new FbmSend({ accessToken: "secret", version: "3.2" });
+  fbmSend = new FbmSend({ accessToken: "secret", version: "4.0" });
 
   request.mockResolvedValue("foo");
 });
@@ -42,7 +42,7 @@ test("it can be initiated with default options", () => {
   const client = new FbmSend();
 
   expect(client.accessToken).toBe(process.env.FB_PAGE_ACCESS_TOKEN);
-  expect(client.version).toBe("3.2");
+  expect(client.version).toBe("4.0");
 });
 
 test("it can be initiated with custom accessToken and version", () => {
@@ -70,7 +70,7 @@ test("it can send request", async () => {
       },
       messaging_type: RESPONSE
     },
-    version: "3.2",
+    version: "4.0",
     formData: false
   });
 });
