@@ -503,7 +503,7 @@ await fbmSend.typingOff({
 
 ## License
 
-[MIT](https://github.com/risan/fbm-send/blob/master/LICENSE) © [Risan Bagja Pradana](https://bagja.net)
+[MIT](https://github.com/risan/fbm-send/blob/master/LICENSE) © [Risan Bagja Pradana](https://risanb.com)
 
 ## Legal
 
