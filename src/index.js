@@ -14,7 +14,7 @@ class FbmSend {
    */
   constructor({
     accessToken = process.env.FB_PAGE_ACCESS_TOKEN,
-    version = "3.2"
+    version = "4.0"
   } = {}) {
     this.accessToken = accessToken;
     this.version = version;

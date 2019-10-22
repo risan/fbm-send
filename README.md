@@ -29,7 +29,7 @@ const webhook = fbmWebhook({
 
 const fbmSend = new FbmSend({
   accessToken: "Your Page Access Token",
-  version: "3.2"
+  version: "4.0"
 });
 
 // Listen to the message event.
@@ -50,7 +50,7 @@ webhook.listen(3000, () => console.log("Server is running on port: 3000"));
 ```
 
 * `accessToken`: Your Facebook page access token, default to `process.env.FB_PAGE_ACCESS_TOKEN`.
-* `version`: The Facebook Graph API version, default to `3.2`.
+* `version`: The Facebook Graph API version, default to `4.0`.
 
 You can use the `try...catch` block to catch the API error response:
 
@@ -90,14 +90,14 @@ Create a new `fbm-send` instance.
 ```js
 new FbmSend([{
   accessToken = process.env.FB_PAGE_ACCESS_TOKEN,
-  version = "3.2"
+  version = "4.0"
 }]);
 ```
 
 #### Parameters
 
 * **`accessToken`** (optional *`String`*): The Facebook page access token, default to `process.env.FB_PAGE_ACCESS_TOKEN`.
-* **`version`** (optional *`String`*): The Facebook Graph API version, default to `3.2`.
+* **`version`** (optional *`String`*): The Facebook Graph API version, default to `4.0`.
 
 ### Send Request
 
