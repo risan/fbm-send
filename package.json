@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@risan/is-plain-obj": "1.x",
-    "form-data": "^2.0.0",
+    "form-data": "^3.0.0",
     "lodash": "^4.0.0",
     "send-request": "^1.0.3"
   },
