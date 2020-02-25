@@ -2,7 +2,6 @@
 
 [![Build Status](https://badgen.net/travis/risan/fbm-send)](https://travis-ci.org/risan/fbm-send)
 [![Test Covarage](https://badgen.net/codecov/c/github/risan/fbm-send)](https://codecov.io/gh/risan/fbm-send)
-[![Greenkeeper](https://badges.greenkeeper.io/risan/fbm-send.svg)](https://greenkeeper.io)
 [![Latest Version](https://badgen.net/npm/v/fbm-send)](https://www.npmjs.com/package/fbm-send)
 
 Send message through Facebook Messenger Send API.
